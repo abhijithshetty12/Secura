@@ -30,6 +30,18 @@ export default function AuthPage() {
       } else {
         await createUserWithEmailAndPassword(auth, email, password)
       }
+      // If user has not set a PIN yet, route them to PIN setup.
+      const uid = auth.currentUser?.uid
+      if (uid) {
+        const { getDoc, doc } = await import('firebase/firestore')
+        const { db } = await import('../firebase/firebaseClient')
+        const snap = await getDoc(doc(db, 'users', uid))
+        const security = snap.data()?.security
+        if (!security?.pinHash || !security?.pinSalt) {
+          navigate('/set-pin', { replace: true })
+          return
+        }
+      }
       navigate('/dashboard')
     } catch (err: any) {
       setError(err?.message ?? 'Authentication failed')
