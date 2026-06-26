@@ -392,24 +392,48 @@ export default function Dashboard() {
     <div className="min-h-screen bg-neutral-950 text-neutral-200 font-sans antialiased overflow-x-hidden selection:bg-[#10b981]/20 selection:text-emerald-400 relative">
 
       {isAppLocked && (
-        <div className="fixed inset-0 bg-neutral-950/60 backdrop-blur-md flex flex-col items-center justify-center z-50 p-4 pointer-events-auto animate-in fade-in duration-200">
-          <div className="w-full max-w-sm text-center bg-neutral-900/80 border border-white/[0.06] p-8 rounded-2xl shadow-2xl backdrop-blur-xl relative">
+        <div
+          className="fixed inset-0 bg-neutral-950/60 backdrop-blur-md flex flex-col items-center justify-center z-50 p-4 pointer-events-auto animate-in fade-in duration-200"
+          onClick={() => {
+            document.getElementById('mobile-pin-hidden-input')?.focus()
+          }}
+        >
+          <div
+            className="w-full max-w-sm text-center bg-neutral-900/80 border border-white/[0.06] p-8 rounded-2xl shadow-2xl backdrop-blur-xl relative"
+            onClick={(e) => e.stopPropagation()} // Stop propagation so clicking the modal doesn't trigger the backdrop click
+          >
+
+            <input
+              id="mobile-pin-hidden-input"
+              type="text"
+              pattern="[0-9]*"
+              inputMode="numeric"
+              maxLength={6}
+              value={pinInput.join('')}
+              onChange={(e) => {
+                const rawValue = e.target.value.replace(/[^0-9]/g, '')
+                setPinError(false)
+                setPinInput(rawValue.split(''))
+              }}
+              className="absolute inset-0 opacity-0 cursor-default w-full h-full z-0 select-none pointer-events-none"
+              autoFocus
+              autoComplete="one-time-code"
+            />
             <div className="mx-auto h-11 w-11 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 mb-3 animate-pulse">
               <Lock className="w-4 h-4" />
             </div>
             <h2 className="text-base font-bold text-neutral-100 tracking-tight">Security Vault Locked</h2>
-            <p className="text-xs text-neutral-500 mt-1 mb-6">Type your secret 6-digit pin to unlock your session.</p>
+            <p className="text-xs text-neutral-500 mt-1 mb-6">Enter your secret 6-digit pin to unlock your session.</p>
 
-            {/* Input display node placeholders */}
-            <div className="flex justify-center gap-2 mb-2">
+            <div className="flex justify-center gap-2 mb-2 relative z-10">
               {[...Array(6)].map((_, idx) => (
                 <div
                   key={idx}
                   className={`w-10 h-12 rounded-xl border flex items-center justify-center font-mono text-base font-bold transition-all duration-150 ${pinError
-                      ? 'border-red-500/40 bg-red-500/5 text-red-400'
-                      : pinInput[idx]
-                        ? 'border-emerald-500/30 bg-emerald-500/5 text-emerald-400'
-                        : 'border-white/[0.04] bg-black/20 text-neutral-600'
+                    ? 'border-red-500/40 bg-red-500/5 text-red-400 animate-shake'
+                    : pinInput[idx]
+                      ? 'border-emerald-500/30 bg-emerald-500/5 text-emerald-400'
+                      : 'border-white/[0.04] bg-black/20 text-neutral-600'
                     }`}
                 >
                   {pinInput[idx] ? "•" : ""}
@@ -417,10 +441,61 @@ export default function Dashboard() {
               ))}
             </div>
 
-            <div className="h-4 mt-2">
+            <div className="h-4 mt-1 mb-4">
               {pinError && (
                 <p className="text-[11px] text-red-400 font-medium animate-shake">Incorrect credentials. Access Denied.</p>
               )}
+            </div>
+
+            <div className="grid grid-cols-3 gap-2 relative z-10">
+              {["1", "2", "3", "4", "5", "6", "7", "8", "9"].map((num) => (
+                <button
+                  key={num}
+                  type="button"
+                  onClick={() => {
+                    if (pinInput.length < 6) {
+                      setPinError(false)
+                      setPinInput((prev) => [...prev, num])
+                    }
+                  }}
+                  className="py-3 rounded-xl bg-white/[0.02] border border-white/[0.04] text-sm font-bold text-neutral-300 hover:bg-white/[0.06] active:bg-white/[0.1] active:scale-95 transition-all cursor-pointer"
+                >
+                  {num}
+                </button>
+              ))}
+
+              <button
+                type="button"
+                onClick={() => setPinInput([])}
+                className="py-3 rounded-xl bg-transparent text-[10px] font-bold text-neutral-600 hover:text-neutral-400 active:scale-95 transition-all cursor-pointer uppercase tracking-wider select-none"
+              >
+                Clear
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  if (pinInput.length < 6) {
+                    setPinError(false)
+                    setPinInput((prev) => [...prev, "0"])
+                  }
+                }}
+                className="py-3 rounded-xl bg-white/[0.02] border border-white/[0.04] text-sm font-bold text-neutral-300 hover:bg-white/[0.06] active:bg-white/[0.1] active:scale-95 transition-all cursor-pointer"
+              >
+                0
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setPinError(false)
+                  setPinInput((prev) => prev.slice(0, -1))
+                }}
+                className="py-3 rounded-xl bg-white/[0.01] text-neutral-500 hover:text-red-400 active:scale-95 transition-all cursor-pointer flex items-center justify-center"
+                aria-label="Delete last input digit"
+              >
+                <Delete className="w-4 h-4" />
+              </button>
             </div>
           </div>
         </div>
