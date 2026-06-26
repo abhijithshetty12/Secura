@@ -1,42 +1,70 @@
-# Secura — Document Organizer (Firebase)
+# 🛡️ Secura Vault
 
-Clean document storage UI with Firebase Auth + Firestore + Storage.
+[![Live Demo](https://img.shields.io/badge/Live_Demo-000000?style=flat&logo=vercel&logoColor=white)](https://secura-vault.vercel.app/)
+![React](https://img.shields.io/badge/React_18-20232A?style=flat&logo=react&logoColor=61DAFB)
+![TypeScript](https://img.shields.io/badge/TypeScript_5-3178C6?style=flat&logo=typescript&logoColor=white)
+![Vite](https://img.shields.io/badge/Vite_5-646CFF?style=flat&logo=vite&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=flat&logo=tailwind-css&logoColor=white)
+![Firebase](https://img.shields.io/badge/Firebase-Database-FFFFFF?style=flat&logo=firebase&logoColor=orange)
 
-## Local dev
-1. Create a Firebase project.
-2. Enable **Email/Password** auth.
-3. Enable Firestore + Storage.
-4. Create a Firebase Web app and copy config.
-5. Create `.env` in the project root (use Vite `VITE_` prefix):
+**Secura Vault** is a high-security, zero-knowledge micro-document management system engineered for safeguarding critical identity and asset records. Built using **React 18**, **TypeScript**, and **Tailwind CSS**, it features a refined glassmorphic dashboard that allows users to instantly upload, view, sort, and organize sensitive payloads (such as Aadhaar, PAN, and Voter IDs). Emphasizing premium privacy, Secura Vault features zero-overhead client-side Base64 streaming and an instant, tab-focus reactive security lock system.
 
-```bash
-VITE_FIREBASE_API_KEY=...
-VITE_FIREBASE_AUTH_DOMAIN=...
-VITE_FIREBASE_PROJECT_ID=...
-VITE_FIREBASE_STORAGE_BUCKET=...
-VITE_FIREBASE_MESSAGING_SENDER_ID=...
-VITE_FIREBASE_APP_ID=...
-```
+---
 
-6. Install deps:
-```bash
-npm install
-```
-7. Run:
-```bash
-npm run dev
-```
-Open the printed localhost URL.
+## 🚀 Key Features
 
-## Firebase data model (planned)
-- Firestore collection: `users/{uid}/documents`
-  - `category`: string (Aadhaar, PAN, Voter ID, Other)
-  - `originalName`: string
-  - `storagePath`: string
-  - `contentType`: string
-  - `createdAt`: timestamp
+* **🔒 Adaptive Tab-Switch Session Lock:** Instantly locks and masks the interface with a glassmorphic overlay the exact moment a user minimizes the window, switches browser tabs, or shifts desktop focus.
+* **⌨️ Mobile-Optimized 6-Digit PIN Re-Auth:** Features a highly responsive visual state synced directly with a hidden semantic input trap. Pulls up native iOS/Android numeric keypads smoothly while accepting seamless physical keyboard inputs.
+* **⚡ Zero-Knowledge Document Ingestion:** Upload and parse document payloads directly to custom directory segments using lightweight client-side Base64 data streaming.
+* **📁 Directory Segmentation:** Intuitively map asset records across specific document categories (`Aadhaar`, `PAN`, `Voter ID`, `Other`) with dedicated visual typography and asset metadata indicators.
+* **🎯 Fuzzy-Match Advanced Search:** Deep filtering engine using multi-word sequential fuzzy matching to index filenames rapidly despite long terms or complex syntax.
+* **🔄 Live Firestore Syncing:** Real-time collection streams tracking structural document updates, custom dynamic inline name edits, and file deletions instantaneously.
+* **📱 Ultra-Modern Bento Dashboard:** A responsive layout crafted with subtle borders, deep glassmorphic highlights, and micro-interactions optimized for mobile and desktop screens.
 
-## Notes
-- Landing page + Dashboard UI are present.
-- Firebase upload/listing wiring and security rules are next steps.
+---
 
+## 🛠️ Tech Stack
+
+| Category | Tools |
+| :--- | :--- |
+| **Frontend** | React 18, TypeScript, Vite |
+| **Styling** | Tailwind CSS, Lucide React (Icons), Glassmorphic Blur Utilities |
+| **Backend / Database** | Firebase Authentication & Cloud Firestore |
+| **Parsing Engine** | PDF.js Dist Worker Rendering Streams |
+| **Deployment** | Vercel (Production Toolchain Workflow) |
+
+---
+
+## 🖼️ Interface Preview
+
+### Core Vault Experience
+| **Login & Identity Gate** | **Secure Asset Dashboard** |
+| :---: | :---: |
+| <img src="/screenshots/auth-gate.png" alt="Auth Page" /> | <img src="/screenshots/dashboard-core.png" alt="Dashboard Core" /> |
+
+### Security & Actions
+| **Tab-Switch Session Lock** | **Inline Asset Metadata Modification** |
+| :---: | :---: |
+| <img src="/screenshots/session-lock.png" alt="Vault Session Lock" /> | <img src="/screenshots/inline-edit.png" alt="Inline Modification" /> |
+
+### Data Management
+| **Segment Filtering & Fuzzy Search** | **Zero-Knowledge Inline Viewer** |
+| :---: | :---: |
+| <img src="/screenshots/search-filter.png" alt="Advanced Filters" /> | <img src="/screenshots/asset-preview.png" alt="Asset Preview" /> |
+
+---
+
+## 👨‍💻 Author
+
+**Abhijith Shetty** *Front-End Web Developer & UI Enthusiast*
+
+> "Passionate about building modern, user-friendly web applications that blend aesthetic design principles with strong technical architectures."
+
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=flat&logo=linkedin&logoColor=white)](https://linkedin.com/in/abhijithshetty12)
+[![GitHub](https://img.shields.io/badge/GitHub-181717?style=flat&logo=github&logoColor=white)](https://github.com/abhijithshetty12)
+
+---
+
+## 🌟 Show Your Support
+
+If you love the security workflow or find the glassmorphic implementation helpful, please drop a ⭐ on **GitHub**! It means a lot and keeps me inspired to build clean digital interfaces.
