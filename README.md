@@ -38,19 +38,14 @@
 ## 🖼️ Interface Preview
 
 ### Core Vault Experience
-| **Login & Identity Gate** | **Secure Asset Dashboard** |
+| **Landing Page Overview** | **Login & Identity Gate** |
 | :---: | :---: |
-| <img src="/screenshots/auth-gate.png" alt="Auth Page" /> | <img src="/screenshots/dashboard-core.png" alt="Dashboard Core" /> |
+| <img src="screenshots/landing.png" alt="Landing Page" width="400" /> | <img src="screenshots/auth.png" alt="Auth Page" width="400" /> |
 
-### Security & Actions
-| **Tab-Switch Session Lock** | **Inline Asset Metadata Modification** |
+### Security & Active Vault
+| **Secure Asset Dashboard** | **Tab-Switch Session Lock** |
 | :---: | :---: |
-| <img src="/screenshots/session-lock.png" alt="Vault Session Lock" /> | <img src="/screenshots/inline-edit.png" alt="Inline Modification" /> |
-
-### Data Management
-| **Segment Filtering & Fuzzy Search** | **Zero-Knowledge Inline Viewer** |
-| :---: | :---: |
-| <img src="/screenshots/search-filter.png" alt="Advanced Filters" /> | <img src="/screenshots/asset-preview.png" alt="Asset Preview" /> |
+| <img src="screenshots/dashboard.png" alt="Dashboard Core" width="400" /> | <img src="screenshots/session-lock.png" alt="Vault Session Lock" width="400" /> |
 
 ---
 

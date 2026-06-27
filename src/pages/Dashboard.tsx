@@ -510,14 +510,14 @@ export default function Dashboard() {
                   filteredDocuments.map((docItem) => (
                     <div key={docItem.id} className="group flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-xl border border-white/[0.03] bg-black/10 px-4 py-3.5 hover:border-white/[0.06] hover:bg-black/30 transition-all duration-200">
                       <div className="flex items-center gap-4 min-w-0 flex-1 w-full">
-                        <div className="h-10 w-10 overflow-hidden rounded-xl bg-neutral-900 border border-white/[0.04] flex items-center justify-center shrink-0">
-                          <img
-                            src={CATEGORY_ICONS[docItem.category]}
-                            alt={docItem.category}
-                            className="h-full w-full object-cover select-none brightness-[0.85] group-hover:brightness-100 transition-all"
-                            onError={(e) => { (e.target as HTMLImageElement).src = logoImg; }}
-                          />
-                        </div>
+                        <div className="w-14 h-10 sm:w-16 sm:h-12 overflow-hidden rounded-xl bg-neutral-900 border border-white/[0.04] flex items-center justify-center shrink-0">
+  <img
+    src={CATEGORY_ICONS[docItem.category]}
+    alt={docItem.category}
+    className="h-full w-full object-cover select-none brightness-[0.85] group-hover:brightness-100 transition-all duration-200"
+    onError={(e) => { (e.target as HTMLImageElement).src = logoImg; }}
+  />
+</div>
                         <div className="min-w-0 flex-1">
                           <div className="flex items-center gap-2 max-w-full">
                             {editingDocId === docItem.id ? (
