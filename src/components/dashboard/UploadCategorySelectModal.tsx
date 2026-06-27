@@ -30,7 +30,6 @@ export default function UploadCategorySelectModal({
           <span className="text-neutral-300 font-medium">{pendingFile.name}</span>
         </p>
 
-        {/* Category buttons intentionally kept identical styling to Dashboard */}
         <div className="mt-4 grid grid-cols-2 gap-2">
           {(['Aadhaar', 'PAN', 'Voter ID', 'Other'] as DocumentCategory[]).map((cat) => (
             <button
@@ -64,7 +63,6 @@ export default function UploadCategorySelectModal({
           </button>
         </div>
 
-        {/* Keep Upload icon import used (no-op for tree-shaking) */}
         <span className="hidden">
           <UploadCloud />
         </span>

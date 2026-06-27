@@ -30,7 +30,6 @@ export default function AuthPage() {
       } else {
         await createUserWithEmailAndPassword(auth, email, password)
       }
-      // If user has not set a PIN yet, route them to PIN setup.
       const uid = auth.currentUser?.uid
       if (uid) {
         const { getDoc, doc } = await import('firebase/firestore')

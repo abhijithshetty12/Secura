@@ -25,14 +25,12 @@ export default function Toast({ message, type, onClose, duration = 4000 }: Toast
                 {isSuccess ? <CheckCircle2 className="w-4 h-4" /> : <AlertCircle className="w-4 h-4" />}
             </div>
 
-            {/* Content */}
             <div className="flex-1 min-w-0 pt-0.5">
                 <p className="text-xs font-semibold text-neutral-200 leading-relaxed break-words">
                     {message}
                 </p>
             </div>
 
-            {/* Close Action */}
             <button
                 onClick={onClose}
                 className="p-1 rounded-lg text-neutral-500 hover:text-neutral-300 hover:bg-white/5 transition active:scale-95 cursor-pointer shrink-0"

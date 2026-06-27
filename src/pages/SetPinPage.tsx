@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore'
 import { auth, db } from '../firebase/firebaseClient'
 import { generatePinSalt, hashPin } from '../firebase/pinHash'
-import { Eye, EyeOff } from 'lucide-react'
+import { Eye, EyeOff, ShieldAlert } from 'lucide-react'
 
 export default function SetPinPage() {
   const navigate = useNavigate()
@@ -124,6 +124,16 @@ export default function SetPinPage() {
                 >
                   {showConfirmPin ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-2.5 p-3 rounded-xl bg-amber-500/[0.02] border border-amber-500/10 text-neutral-400">
+              <ShieldAlert className="w-4 h-4 text-amber-500/80 shrink-0 mt-0.5 animate-pulse" />
+              <div className="space-y-0.5">
+                <p className="text-[11px] font-bold tracking-wide text-amber-500/90 uppercase">Important Reminder</p>
+                <p className="text-[11px] leading-normal text-neutral-400">
+                  Please memorize this session lock PIN. You will need it to verify your identity and restore access to your assets every time the vault goes idle.
+                </p>
               </div>
             </div>
 

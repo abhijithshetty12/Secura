@@ -595,9 +595,6 @@ export default function Dashboard() {
           </div>
         </div>
       )}
-
-
-
       {previewDoc && (
         <div className="fixed inset-0 bg-black/95 backdrop-blur-sm flex flex-col items-center justify-center z-50 p-3 sm:p-4 pointer-events-auto">
           <div className="w-full max-w-4xl flex items-center justify-between mb-4 px-1">

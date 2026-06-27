@@ -146,7 +146,6 @@ export default function DashboardUploadFlow({ onUploaded }: DashboardUploadFlowP
         />
       )}
 
-      {/* Modern Active Toast Layer */}
       {toast && (
         <Toast 
           message={toast.message} 

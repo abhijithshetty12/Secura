@@ -14,7 +14,7 @@ body,
 }
 
 body {
-  background-color: #09090b; /* Fallback hex for zinc-950 */
-  color: #fafafa;           /* Fallback hex for zinc-50 */
+  background-color: #09090b;
+  color: #fafafa;       
   font-family: sans-serif;
 }
