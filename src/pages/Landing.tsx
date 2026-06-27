@@ -2,7 +2,7 @@ import Lenis from '@studio-freight/lenis'
 import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { Shield, LayoutGrid, Zap, Sparkles, FileText, ArrowRight, LogInIcon } from 'lucide-react'
-import logoImg from '/assets/logo.jpg'
+import logoImg from '../assets/logo.jpg'
 
 interface BentoCardProps {
   title: string
