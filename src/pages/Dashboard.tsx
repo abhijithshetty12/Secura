@@ -22,7 +22,7 @@ import {
 
 import SessionLockOverlay from '../components/sessionlock'
 import { hashPin } from '../firebase/pinHash'
-
+import DashboardUploadFlow from '../components/dashboard/DashboardUploadFlow'
 
 import PDFWorker from 'pdfjs-dist/build/pdf.worker.mjs?url'
 pdfjsLib.GlobalWorkerOptions.workerSrc = PDFWorker
@@ -89,12 +89,10 @@ export default function Dashboard() {
   const [queryText, setQueryText] = useState('')
   const [sortBy, setSortBy] = useState<SortOption>('newest')
   const [isSortOpen, setIsSortOpen] = useState(false)
-  const [isUploading, setIsUploading] = useState(false)
   const navigate = useNavigate()
   const [documents, setDocuments] = useState<UserDocument[]>([])
   const [previewDoc, setPreviewDoc] = useState<UserDocument | null>(null)
-  const [pendingFile, setPendingFile] = useState<File | null>(null)
-  const [selectedUploadCategory, setSelectedUploadCategory] = useState<DocumentCategory>('Other')
+
   const [editingDocId, setEditingDocId] = useState<string | null>(null)
   const [editingName, setEditingName] = useState('')
   const [isAppLocked, setIsAppLocked] = useState(false)
@@ -281,64 +279,7 @@ export default function Dashboard() {
       console.error('Failed to log out:', error)
     }
   }
-  const formatFileSize = (bytes: number): string => {
-    if (bytes === 0) return '0 Bytes'
-    const k = 1024
-    const sizes = ['Bytes', 'KB', 'MB']
-    const i = Math.floor(Math.log(bytes) / Math.log(k))
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i]
-  }
 
-  const fileToRawBase64 = (file: File): Promise<string> => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader()
-      reader.readAsDataURL(file)
-      reader.onload = () => resolve(reader.result as string)
-      reader.onerror = (error) => reject(error)
-    })
-  }
-
-  function handleInitialFileSelect(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0]
-    if (!file) return
-
-    setPendingFile(file)
-    setSelectedUploadCategory('Other')
-    e.target.value = ''
-  }
-
-  async function executeUploadPipeline() {
-    if (!pendingFile || !auth.currentUser) return
-
-    try {
-      setIsUploading(true)
-      const base64DataUrl = await fileToRawBase64(pendingFile)
-      const sizeFormatted = formatFileSize(pendingFile.size)
-      const uniqueDocId = doc(collection(db, 'users', auth.currentUser.uid, 'documents')).id
-
-      await setDoc(doc(db, 'users', auth.currentUser.uid), {
-        email: auth.currentUser.email,
-        updatedAt: serverTimestamp()
-      }, { merge: true })
-
-      const preciseDocRef = doc(db, 'users', auth.currentUser.uid, 'documents', uniqueDocId)
-      await setDoc(preciseDocRef, {
-        name: pendingFile.name,
-        category: selectedUploadCategory,
-        fileUrl: base64DataUrl,
-        sizeText: sizeFormatted,
-        createdAt: serverTimestamp()
-      })
-
-      setPendingFile(null)
-      setActive('All')
-    } catch (err) {
-      console.error(err)
-      alert('Database indexing failed. Document payload footprint is too large.')
-    } finally {
-      setIsUploading(false)
-    }
-  }
 
   function startEditing(docItem: UserDocument) {
     setEditingDocId(docItem.id)
@@ -531,11 +472,8 @@ export default function Dashboard() {
               )}
             </div>
 
-            <label className="relative flex items-center justify-center gap-2 rounded-xl border border-[#10b981]/20 bg-[#10b981]/5 px-5 py-2.5 text-sm font-bold text-[#10b981] transition hover:bg-[#10b981]/10 active:scale-[0.98] cursor-pointer group">
-              <UploadCloud className="w-4 h-4 text-[#10b981] transition-transform group-hover:-translate-y-0.5" />
-              <span>Upload Asset</span>
-              <input type="file" onChange={handleInitialFileSelect} accept="image/*,application/pdf" className="absolute inset-0 opacity-0 cursor-pointer" />
-            </label>
+            <DashboardUploadFlow onUploaded={() => setActive('All')} />
+
           </div>
         </div>
 
@@ -658,31 +596,7 @@ export default function Dashboard() {
         </div>
       )}
 
-      {pendingFile && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4 pointer-events-auto">
-          <div className="w-full max-w-[360px] bg-neutral-900 border border-white/[0.06] rounded-2xl p-5 shadow-2xl">
-            <h3 className="text-base font-bold text-neutral-100">Index Category Selection</h3>
-            <p className="text-xs text-neutral-500 mt-1 truncate">Assigning metadata tags for: <span className="text-neutral-300 font-medium">{pendingFile.name}</span></p>
-            <div className="mt-4 grid grid-cols-2 gap-2">
-              {(CATEGORIES.filter(c => c !== 'All') as DocumentCategory[]).map((cat) => (
-                <button
-                  key={cat}
-                  onClick={() => setSelectedUploadCategory(cat)}
-                  className={`py-2.5 px-3 rounded-xl text-xs font-semibold border text-center transition-all cursor-pointer ${selectedUploadCategory === cat ? 'bg-[#10b981]/10 text-[#10b981] border-[#10b981]/30' : 'bg-black/40 text-neutral-400 border-white/[0.04] hover:bg-white/[0.02]'}`}
-                >
-                  {cat}
-                </button>
-              ))}
-            </div>
-            <div className="mt-5 flex gap-2">
-              <button onClick={() => setPendingFile(null)} className="flex-1 py-2.5 rounded-xl text-xs font-bold text-neutral-500 bg-white/5 border border-white/[0.04] hover:bg-white/10 transition cursor-pointer">Cancel</button>
-              <button onClick={executeUploadPipeline} disabled={isUploading} className="flex-1 py-2.5 rounded-xl text-xs font-bold text-black bg-[#10b981] hover:bg-emerald-400 transition cursor-pointer">
-                {isUploading ? 'Encoding...' : 'Commit to Vault'}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+
 
       {previewDoc && (
         <div className="fixed inset-0 bg-black/95 backdrop-blur-sm flex flex-col items-center justify-center z-50 p-3 sm:p-4 pointer-events-auto">

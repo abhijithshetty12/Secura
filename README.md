@@ -1,4 +1,4 @@
-# 🛡️ Secura Vault
+# 🛡️ Secura
 
 [![Live Demo](https://img.shields.io/badge/Live_Demo-000000?style=flat&logo=vercel&logoColor=white)](https://secura-vault.vercel.app/)
 ![React](https://img.shields.io/badge/React_18-20232A?style=flat&logo=react&logoColor=61DAFB)
@@ -7,7 +7,7 @@
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=flat&logo=tailwind-css&logoColor=white)
 ![Firebase](https://img.shields.io/badge/Firebase-Database-FFFFFF?style=flat&logo=firebase&logoColor=orange)
 
-**Secura Vault** is a high-security, zero-knowledge micro-document management system engineered for safeguarding critical identity and asset records. Built using **React 18**, **TypeScript**, and **Tailwind CSS**, it features a refined glassmorphic dashboard that allows users to instantly upload, view, sort, and organize sensitive payloads (such as Aadhaar, PAN, and Voter IDs). Emphasizing premium privacy, Secura Vault features zero-overhead client-side Base64 streaming and an instant, tab-focus reactive security lock system.
+**Secura** is a high-security, zero-knowledge micro-document management system engineered for safeguarding critical identity and asset records. Built using **React 18**, **TypeScript**, and **Tailwind CSS**, it features a refined glassmorphic dashboard that allows users to instantly upload, view, sort, and organize sensitive payloads (such as Aadhaar, PAN, and Voter IDs). Emphasizing premium privacy, Secura features zero-overhead client-side Base64 streaming and an instant, tab-focus reactive security lock system.
 
 ---
 
