@@ -49,33 +49,40 @@ export default function AuthPage() {
     }
   }
 
-  async function handleGoogleSignIn() {
+  async function handleFederatedSignIn(provider: GoogleAuthProvider | GithubAuthProvider) {
     setBusy(true)
     setError(null)
-    const provider = new GoogleAuthProvider()
     try {
       await signInWithPopup(auth, provider)
-      navigate('/dashboard')
+      const uid = auth.currentUser?.uid
+      if (uid) {
+        const { getDoc, doc } = await import('firebase/firestore')
+        const { db } = await import('../firebase/firebaseClient')
+        const snap = await getDoc(doc(db, 'users', uid))
+        const security = snap.data()?.security
+        if (!security?.pinHash || !security?.pinSalt) {
+          navigate('/set-pin', { replace: true })
+          return
+        }
+      }
+      navigate('/dashboard', { replace: true })
     } catch (err: any) {
-      setError(err?.message ?? 'Google Sign-In failed')
+      setError(err?.message ?? 'Federated Sign-In failed')
     } finally {
       setBusy(false)
     }
   }
 
-  async function handleGithubSignIn() {
-    setBusy(true)
-    setError(null)
-    const provider = new GithubAuthProvider()
-    try {
-      await signInWithPopup(auth, provider)
-      navigate('/dashboard')
-    } catch (err: any) {
-      setError(err?.message ?? 'GitHub Sign-In failed')
-    } finally {
-      setBusy(false)
-    }
+  async function handleGoogleSignIn() {
+    const provider = new GoogleAuthProvider()
+    await handleFederatedSignIn(provider)
   }
+
+  async function handleGithubSignIn() {
+    const provider = new GithubAuthProvider()
+    await handleFederatedSignIn(provider)
+  }
+
 
   return (
     <div className="min-h-screen text-neutral-200 bg-[#040608] flex items-center justify-center font-sans selection:bg-[#10b981]/20 selection:text-[#10b981] antialiased relative overflow-hidden px-4 sm:px-6">
