@@ -11,7 +11,9 @@ import Toast, { ToastType } from './Toast' // [Polished Addition]
 
 export type DashboardUploadFlowProps = {
   onUploaded: () => void
+  onPickerOpenChange?: (isOpen: boolean) => void
 }
+
 
 type UploadPhase = 'validating' | 'encrypting' | 'indexing' | 'done'
 
@@ -41,7 +43,7 @@ function getFriendlyFileError(file: File) {
   return null
 }
 
-export default function DashboardUploadFlow({ onUploaded }: DashboardUploadFlowProps) {
+export default function DashboardUploadFlow({ onUploaded, onPickerOpenChange }: DashboardUploadFlowProps) {
   const [pendingFile, setPendingFile] = useState<File | null>(null)
   const [selectedUploadCategory, setSelectedUploadCategory] = useState<DocumentCategory>('Other')
 
@@ -64,10 +66,14 @@ export default function DashboardUploadFlow({ onUploaded }: DashboardUploadFlowP
   }, [pendingFile])
 
   function handleFileSelected(file: File) {
+    // Picker is no longer active once we received the selected file.
+    onPickerOpenChange?.(false)
+
     setFileError(null)
     setPendingFile(null)
 
     const error = getFriendlyFileError(file)
+
     if (error) {
       setFileError(error)
       showToast(error, 'error') // Premium Replacement
@@ -140,11 +146,15 @@ export default function DashboardUploadFlow({ onUploaded }: DashboardUploadFlowP
           pendingFile={pendingFile}
           selectedUploadCategory={selectedUploadCategory}
           isUploading={isUploading}
-          onCancel={() => setPendingFile(null)}
+          onCancel={() => {
+            onPickerOpenChange?.(false)
+            setPendingFile(null)
+          }}
           onSelectCategory={setSelectedUploadCategory}
           onCommit={executeUploadPipeline}
         />
       )}
+
 
       {toast && (
         <Toast 

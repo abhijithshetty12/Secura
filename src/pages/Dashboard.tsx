@@ -87,6 +87,7 @@ export default function Dashboard() {
   const [active, setActive] = useState<Category>('All')
   const [queryText, setQueryText] = useState('')
   const [sortBy, setSortBy] = useState<SortOption>('newest')
+  const [isNativePickerOpen, setIsNativePickerOpen] = useState(false)
   const [isSortOpen, setIsSortOpen] = useState(false)
   const navigate = useNavigate()
   const [documents, setDocuments] = useState<UserDocument[]>([])
@@ -193,13 +194,18 @@ export default function Dashboard() {
   useEffect(() => {
     const INACTIVITY_TIMEOUT = 5 * 60 * 1000
 
+    // When the native mobile file picker/upload modal is open, don't lock.
+    const shouldBlockLock = () => isNativePickerOpen
+
     const checkTimeoutValidity = () => {
+      if (shouldBlockLock()) return
       if (Date.now() - lastActivityRef.current > INACTIVITY_TIMEOUT && !isAppLocked && auth.currentUser) {
         setIsAppLocked(true)
       }
     }
 
     const handleVisibilityAndFocus = () => {
+      if (shouldBlockLock()) return
       if (document.visibilityState === 'hidden') {
         setIsAppLocked(true)
       }
@@ -471,7 +477,10 @@ export default function Dashboard() {
               )}
             </div>
 
-            <DashboardUploadFlow onUploaded={() => setActive('All')} />
+            <DashboardUploadFlow
+              onUploaded={() => setActive('All')}
+              onPickerOpenChange={setIsNativePickerOpen}
+            />
 
           </div>
         </div>
