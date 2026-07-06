@@ -92,23 +92,25 @@ export default function AuthPage() {
         <div className="rounded-3xl border border-white/[0.04] bg-[#090d14]/70 p-6 sm:p-8 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.9)] backdrop-blur-3xl ring-1 ring-white/[0.01]">
           
           <div className="mb-8 flex flex-col items-center text-center relative">
-            <div className="absolute top-0 right-0">
-              <Link className="text-[11px] font-medium tracking-wide text-neutral-400 hover:text-white transition-colors bg-white/[0.02] hover:bg-white/[0.06] rounded-xl px-3 py-1.5 border border-white/[0.04]" to="/">
-                Home
-              </Link>
-            </div>
-            
-            <div className="mb-4 flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-b from-white/[0.03] to-transparent border border-white/[0.06] shadow-[0_0_20px_rgba(16,185,129,0.15)] p-3">
-              <svg className="w-full h-full text-[#10b981]" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M50 5C35 5 15 15 15 35V65C15 85 35 95 50 95C65 95 85 85 85 65V35C85 15 65 5 50 5ZM50 35C56.6 35 62 40.4 62 47C62 52.1 58.8 56.4 54.3 58.1L57.5 81H42.5L45.7 58.1C41.2 56.4 38 52.1 38 47C38 40.4 43.4 35 50 35Z" fill="currentColor" fillRule="evenodd" clipRule="evenodd"/>
-              </svg>
-            </div>
+  <div className="absolute top-0 right-0">
+    <Link className="text-[11px] font-medium tracking-wide text-neutral-400 hover:text-white transition-colors bg-white/[0.02] hover:bg-white/[0.06] rounded-xl px-3 py-1.5 border border-white/[0.04]" to="/">
+      Home
+    </Link>
+  </div>
+  
+  <div className="mb-4 flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-b from-white/[0.03] to-transparent border border-white/[0.06] shadow-[0_0_20px_rgba(16,185,129,0.15)] overflow-hidden">
+    <img 
+      src="/src/assets/logo.jpg" 
+      alt="Logo" 
+      className="w-full h-full object-cover"
+    />
+  </div>
 
-            <h1 className="text-xl font-semibold tracking-tight text-white">
-              {mode === 'login' ? 'Welcome back' : 'Create account'}
-            </h1>
-            <p className="text-xs text-neutral-400 mt-1">Secure decentralized credential indexing.</p>
-          </div>
+  <h1 className="text-xl font-semibold tracking-tight text-white">
+    {mode === 'login' ? 'Welcome back' : 'Create account'}
+  </h1>
+  <p className="text-xs text-neutral-400 mt-1">Secure decentralized credential indexing.</p>
+</div>
 
           <div className="mb-6 p-1 bg-black/50 rounded-2xl border border-white/[0.02] flex gap-1 relative">
             <button
