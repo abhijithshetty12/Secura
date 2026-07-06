@@ -84,11 +84,20 @@ export default function AuthPage() {
   }
 
   return (
-    <div className="min-h-screen text-neutral-200 bg-[#000000] flex items-center justify-center font-sans selection:bg-[#d1fa4c]/20 selection:text-[#d1fa4c] antialiased relative overflow-hidden px-4 sm:px-6">
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[100vw] h-[100vw] sm:w-[600px] sm:h-[600px] rounded-full bg-[#d1fa4c]/5 blur-[140px] pointer-events-none" />
+    <div className="min-h-screen text-neutral-200 bg-[#020203] flex items-center justify-center font-sans selection:bg-[#d1fa4c]/20 selection:text-[#d1fa4c] antialiased relative overflow-hidden px-4 sm:px-6">
+      
+      <div className="absolute inset-0 opacity-[0.02] pointer-events-none" style={{ backgroundImage: 'radial-gradient(#d1fa4c 1px, transparent 1px)', backgroundSize: '24px 24px' }} />
+      
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.01)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.01)_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)] pointer-events-none" />
+
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[130vw] h-[130vw] sm:w-[800px] sm:h-[800px] rounded-full bg-gradient-to-tr from-[#d1fa4c]/10 via-transparent to-transparent blur-[160px] pointer-events-none" />
 
       <div className="w-full max-w-[400px] relative z-10 py-6 sm:py-8">
-        <div className="rounded-3xl border border-white/[0.03] bg-[#050505]/80 p-5 sm:p-8 shadow-[0_32px_64px_-16px_rgba(0,0,0,1)] backdrop-blur-3xl">
+        
+        <div className="absolute inset-0 rounded-3xl bg-[#d1fa4c]/5 blur-2xl scale-[0.98] pointer-events-none" />
+        <div className="absolute -inset-px rounded-3xl bg-gradient-to-b from-white/[0.06] via-[#d1fa4c]/10 to-transparent pointer-events-none" />
+
+        <div className="rounded-3xl border border-white/[0.04] bg-[#060709]/90 p-5 sm:p-8 shadow-[0_0_50px_-12px_rgba(209,250,76,0.12),0_32px_64px_-16px_rgba(0,0,0,1)] backdrop-blur-3xl relative">
 
           <div className="mb-6 flex flex-col items-center text-center relative">
             <div className="absolute top-0 right-0">
@@ -97,7 +106,7 @@ export default function AuthPage() {
               </Link>
             </div>
 
-            <div className="mb-4 flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-b from-white/[0.03] to-transparent border border-white/[0.06] shadow-[0_0_20px_rgba(209,250,76,0.1)] overflow-hidden">
+            <div className="mb-4 flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-b from-white/[0.03] to-transparent border border-white/[0.06] shadow-[0_0_20px_rgba(209,250,76,0.15)] overflow-hidden">
               <img
                 src={logoImg}
                 alt="Logo"
@@ -105,7 +114,7 @@ export default function AuthPage() {
               />
             </div>
 
-            <h1 className="text-xl font-semibold tracking-tight text-white">
+            <h1 className="text-xl font-semibold tracking-tight text-white flex items-center gap-2">
               {mode === 'login' ? 'Welcome back' : 'Create account'}
             </h1>
             <p className="text-xs text-neutral-400 mt-1">Secure decentralized credential indexing.</p>
@@ -186,7 +195,7 @@ export default function AuthPage() {
 
             <button
               disabled={busy}
-              className="w-full h-11 relative mt-2 rounded-xl bg-[#d1fa4c] text-xs font-semibold text-black transition-all disabled:opacity-40 flex items-center justify-center gap-2 shadow-[0_4px_20px_rgba(209,250,76,0.15)] active:scale-[0.99] cursor-pointer"
+              className="w-full h-11 relative mt-2 rounded-xl bg-[#d1fa4c] text-xs font-semibold text-black transition-all disabled:opacity-40 flex items-center justify-center gap-2 shadow-[0_4px_20px_rgba(209,250,76,0.25)] active:scale-[0.99] cursor-pointer animate-pulse-subtle"
             >
               {busy ? (
                 <div className="h-4 w-4 animate-spin rounded-full border-2 border-black border-t-transparent" />
