@@ -8,6 +8,7 @@ import {
   signInWithPopup
 } from 'firebase/auth'
 import { auth } from '../firebase/firebaseClient'
+import logoImg from '../assets/logo.jpg'
 
 export default function AuthPage() {
   const [mode, setMode] = useState<'login' | 'signup'>('login')
@@ -87,30 +88,30 @@ export default function AuthPage() {
   return (
     <div className="min-h-screen text-neutral-200 bg-[#040608] flex items-center justify-center font-sans selection:bg-[#10b981]/20 selection:text-[#10b981] antialiased relative overflow-hidden px-4 sm:px-6">
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90vw] h-[90vw] sm:w-[600px] sm:h-[600px] rounded-full bg-[#10b981]/10 blur-[120px] pointer-events-none" />
-      
+
       <div className="w-full max-w-[420px] relative z-10 py-4 sm:py-6">
         <div className="rounded-3xl border border-white/[0.04] bg-[#090d14]/70 p-6 sm:p-8 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.9)] backdrop-blur-3xl ring-1 ring-white/[0.01]">
-          
-          <div className="mb-8 flex flex-col items-center text-center relative">
-  <div className="absolute top-0 right-0">
-    <Link className="text-[11px] font-medium tracking-wide text-neutral-400 hover:text-white transition-colors bg-white/[0.02] hover:bg-white/[0.06] rounded-xl px-3 py-1.5 border border-white/[0.04]" to="/">
-      Home
-    </Link>
-  </div>
-  
-  <div className="mb-4 flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-b from-white/[0.03] to-transparent border border-white/[0.06] shadow-[0_0_20px_rgba(16,185,129,0.15)] overflow-hidden">
-    <img 
-      src="/src/assets/logo.jpg" 
-      alt="Logo" 
-      className="w-full h-full object-cover"
-    />
-  </div>
 
-  <h1 className="text-xl font-semibold tracking-tight text-white">
-    {mode === 'login' ? 'Welcome back' : 'Create account'}
-  </h1>
-  <p className="text-xs text-neutral-400 mt-1">Secure decentralized credential indexing.</p>
-</div>
+          <div className="mb-8 flex flex-col items-center text-center relative">
+            <div className="absolute top-0 right-0">
+              <Link className="text-[11px] font-medium tracking-wide text-neutral-400 hover:text-white transition-colors bg-white/[0.02] hover:bg-white/[0.06] rounded-xl px-3 py-1.5 border border-white/[0.04]" to="/">
+                Home
+              </Link>
+            </div>
+
+            <div className="mb-4 flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-b from-white/[0.03] to-transparent border border-white/[0.06] shadow-[0_0_20px_rgba(16,185,129,0.15)] overflow-hidden">
+              <img
+                src={logoImg}
+                alt="Logo"
+                className="w-full h-full object-cover"
+              />
+            </div>
+
+            <h1 className="text-xl font-semibold tracking-tight text-white">
+              {mode === 'login' ? 'Welcome back' : 'Create account'}
+            </h1>
+            <p className="text-xs text-neutral-400 mt-1">Secure decentralized credential indexing.</p>
+          </div>
 
           <div className="mb-6 p-1 bg-black/50 rounded-2xl border border-white/[0.02] flex gap-1 relative">
             <button
@@ -127,7 +128,7 @@ export default function AuthPage() {
             >
               Sign up
             </button>
-            <div 
+            <div
               className="absolute top-1 bottom-1 left-1 bg-white/[0.04] border border-white/[0.04] rounded-xl shadow-[0_2px_10px_rgba(0,0,0,0.5)] transition-all duration-300 ease-out"
               style={{
                 width: 'calc(50% - 4px)',
