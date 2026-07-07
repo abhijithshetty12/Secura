@@ -10,7 +10,7 @@ import { auth } from '../firebase/firebaseClient'
 
 export default function AuthPage() {
   const [mode, setMode] = useState<'login' | 'signup'>('login')
-  const [email, setEmail] = useState('vladderkach@mail.com') // Preset from design mockup
+  const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -78,36 +78,35 @@ export default function AuthPage() {
   return (
     <div className="min-h-screen bg-[#07090e] flex items-center justify-center font-sans antialiased relative px-4 selection:bg-emerald-500/30 selection:text-emerald-400">
       
-      {/* Deep Vignette Layer to mimic studio photography backdrop */}
+      {/* Background radial shading matching the studio lighting backdrop */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_20%,#020305_90%)] pointer-events-none" />
 
-      {/* Main Container - Framed like a premium reflective glass panel */}
+      {/* Main Container - High glassmorphic premium glossy panel wrap */}
       <div className="w-full max-w-[430px] relative rounded-[48px] p-[1px] bg-gradient-to-b from-white/[0.12] via-white/[0.03] to-transparent shadow-[0_50px_100px_-20px_rgba(0,0,0,0.9)] overflow-hidden">
         
-        {/* Extreme Specular Highlights (The glossy glare streaks inside the glass panel) */}
+        {/* Dynamic Specular Highlights across the glass surface */}
         <div className="absolute top-0 left-0 right-0 h-48 bg-gradient-to-b from-white/[0.08] via-white/[0.01] to-transparent pointer-events-none transform -skew-y-12 origin-top-left scale-150" />
         <div className="absolute top-2 left-4 w-24 h-24 rounded-full bg-emerald-400/10 blur-xl pointer-events-none" />
         
         {/* Glass Card Body */}
         <div className="rounded-[47px] bg-gradient-to-b from-[#161d26]/60 to-[#0c1017]/90 backdrop-blur-3xl px-8 pt-14 pb-12 relative z-10">
           
-          {/* Header Layout */}
+          {/* Header */}
           <div className="text-center mb-10">
             <h1 className="text-3xl font-medium tracking-tight text-neutral-200 drop-shadow-sm">
-              {mode === 'login' ? 'Welcome back' : 'Create account'}
+              Welcome back
             </h1>
             <p className="text-sm text-neutral-500 font-normal mt-2">
               Sign in to your account
             </p>
           </div>
 
-          {/* Core Credentials Form */}
+          {/* Form Actions */}
           <form onSubmit={onSubmitEmail} className="space-y-4">
             
-            {/* Volumetric Glossy Email Pill */}
+            {/* Glossy Pill Input Area */}
             <div className="relative rounded-full p-[1px] bg-gradient-to-b from-white/[0.15] via-white/[0.04] to-transparent shadow-[inset_0_1px_2px_rgba(255,255,255,0.05),0_10px_20px_rgba(0,0,0,0.4)]">
               <div className="bg-[#1b222d]/40 rounded-full h-16 flex items-center pl-7 pr-3 relative overflow-hidden group">
-                {/* Internal dynamic lighting shine */}
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/[0.02] to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out" />
                 
                 <div className="flex-1 flex flex-col justify-center min-w-0">
@@ -117,12 +116,12 @@ export default function AuthPage() {
                     onChange={(e) => setEmail(e.target.value)}
                     type="email"
                     className="w-full bg-transparent text-sm font-medium text-neutral-200 outline-none placeholder:text-neutral-600 mt-0.5 truncate"
-                    placeholder="name@domain.com"
+                    placeholder="vladderkach@mail.com"
                     required
                   />
                 </div>
                 
-                {/* Neon Cyan/Emerald Submit Dial */}
+                {/* Cyan/Emerald Action Dial */}
                 <button
                   type="submit"
                   disabled={busy}
@@ -139,7 +138,7 @@ export default function AuthPage() {
               </div>
             </div>
 
-            {/* Hidden/Collapsible Password field when working with traditional auth systems */}
+            {/* Hidden/Collapsible Password field when mode switches away from clean OAuth flow */}
             {mode === 'signup' && (
               <div className="relative rounded-full p-[1px] bg-gradient-to-b from-white/[0.1] via-white/[0.02] to-transparent">
                 <div className="bg-[#1b222d]/30 rounded-full h-14 flex items-center px-7">
@@ -165,16 +164,16 @@ export default function AuthPage() {
             )}
           </form>
 
-          {/* Sleek Horizontal Splitter */}
+          {/* Section Divider */}
           <div className="my-8 flex items-center justify-between px-2">
             <span className="h-[1px] flex-1 bg-gradient-to-r from-transparent via-white/[0.06] to-transparent" />
             <span className="text-[11px] font-semibold tracking-widest text-neutral-600 uppercase mx-4">OR</span>
             <span className="h-[1px] flex-1 bg-gradient-to-l from-transparent via-white/[0.06] to-transparent" />
           </div>
 
-          {/* Federated Connectors Stack */}
+          {/* Social Auth Stack */}
           <div className="space-y-3.5">
-            {/* Google OAuth Option */}
+            {/* Google Integration */}
             <button
               type="button"
               onClick={handleGoogleSignIn}
@@ -199,7 +198,7 @@ export default function AuthPage() {
               </div>
             </button>
 
-            {/* X / Twitter Option */}
+            {/* X Integration */}
             <button
               type="button"
               disabled={busy}
@@ -221,7 +220,7 @@ export default function AuthPage() {
             </button>
           </div>
 
-          {/* Footer Navigation */}
+          {/* Alternative Footer Actions */}
           <div className="mt-12 text-center">
             <span className="text-xs text-neutral-500 font-medium tracking-normal">
               {mode === 'login' ? "Don't have an account? " : "Already registered? "}
