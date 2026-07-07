@@ -1,7 +1,7 @@
 import { useMemo, useState, useEffect, useRef, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { signOut } from 'firebase/auth'
-import { collection, query, onSnapshot, orderBy, doc, setDoc, updateDoc, deleteDoc, serverTimestamp, getDoc } from 'firebase/firestore'
+import { collection, query, onSnapshot, orderBy, doc, setDoc, updateDoc, deleteDoc, getDoc } from 'firebase/firestore'
 import { auth, db } from '../firebase/firebaseClient'
 import * as pdfjsLib from 'pdfjs-dist'
 
@@ -10,14 +10,15 @@ import {
   Search,
   ChevronDown,
   Check,
-  UploadCloud,
   Folder,
   Edit3,
   Trash2,
   X,
   Download,
   AlertTriangle,
-  Delete
+  SlidersHorizontal,
+  LayoutGrid,
+  FileText
 } from 'lucide-react'
 
 import SessionLockOverlay from '../components/sessionlock'
@@ -102,6 +103,7 @@ export default function Dashboard() {
   const [pinHash, setPinHash] = useState<string | null>(null)
   const [securityLoaded, setSecurityLoaded] = useState(false)
   const [deleteTarget, setDeleteTarget] = useState<UserDocument | null>(null)
+  const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false)
   const lastActivityRef = useRef<number>(Date.now())
 
   const recordUserActivity = useCallback(() => {
@@ -124,19 +126,19 @@ export default function Dashboard() {
   useEffect(() => {
     const run = async () => {
       const uid = auth.currentUser?.uid
-      if (!uid) return
-      try {
-        const snap = await getDoc(doc(db, 'users', uid))
-        const security = snap.data()?.security
-        setPinSalt(security?.pinSalt ?? null)
-        setPinHash(security?.pinHash ?? null)
-      } catch (e) {
-        console.error('Failed to load security profile', e)
-        setPinSalt(null)
-        setPinHash(null)
-      } finally {
-        setSecurityLoaded(true)
-      }
+        if (!uid) return
+        try {
+          const snap = await getDoc(doc(db, 'users', uid))
+          const security = snap.data()?.security
+          setPinSalt(security?.pinSalt ?? null)
+          setPinHash(security?.pinHash ?? null)
+        } catch (e) {
+          console.error('Failed to load security profile', e)
+          setPinSalt(null)
+          setPinHash(null)
+        } finally {
+          setSecurityLoaded(true)
+        }
     }
     run().catch((e) => console.error(e))
   }, [])
@@ -175,7 +177,6 @@ export default function Dashboard() {
     void verify()
   }, [pinInput, pinSalt, pinHash, navigate])
 
-
   useEffect(() => {
     if (!isAppLocked) return
 
@@ -194,7 +195,6 @@ export default function Dashboard() {
   useEffect(() => {
     const INACTIVITY_TIMEOUT = 5 * 60 * 1000
 
-    // When the native mobile file picker/upload modal is open, don't lock.
     const shouldBlockLock = () => isNativePickerOpen
 
     const checkTimeoutValidity = () => {
@@ -285,7 +285,6 @@ export default function Dashboard() {
     }
   }
 
-
   function startEditing(docItem: UserDocument) {
     setEditingDocId(docItem.id)
     setEditingName(docItem.name)
@@ -299,7 +298,6 @@ export default function Dashboard() {
       setEditingDocId(null)
     } catch (err) {
       console.error(err)
-      alert('Failed to update file name.')
     }
   }
 
@@ -312,7 +310,6 @@ export default function Dashboard() {
       setDeleteTarget(null)
     } catch (err) {
       console.error('Failed to delete document:', err)
-      alert('Could not complete deletion.')
     }
   }
 
@@ -347,7 +344,6 @@ export default function Dashboard() {
       }
     } catch (err) {
       console.error(err)
-      alert('Failed to parse asset data stream for download.')
     }
   }
 
@@ -371,7 +367,10 @@ export default function Dashboard() {
   }, [active, queryText, sortBy, documents])
 
   return (
-    <div className="min-h-screen bg-neutral-950 text-neutral-200 font-sans antialiased overflow-x-hidden selection:bg-[#10b981]/20 selection:text-emerald-400 relative">
+    <div className="min-h-screen bg-neutral-950 text-neutral-200 font-sans antialiased overflow-x-hidden selection:bg-emerald-500/20 selection:text-emerald-400 relative">
+      <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] rounded-full bg-emerald-500/5 blur-[120px] pointer-events-none" />
+      <div className="absolute bottom-[-10%] right-[-10%] w-[600px] h-[600px] rounded-full bg-emerald-600/5 blur-[150px] pointer-events-none" />
+
       {isAppLocked && (
         <SessionLockOverlay
           isAppLocked={isAppLocked}
@@ -407,169 +406,182 @@ export default function Dashboard() {
         />
       )}
 
-      <header className="border-b border-white/[0.04] bg-neutral-900/40 backdrop-blur-md sticky top-0 z-40">
-        <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
+      <header className="border-b border-white/[0.04] bg-neutral-900/40 backdrop-blur-xl sticky top-0 z-40 transition-all duration-300">
+        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
           <div className="flex items-center gap-3">
-            <div className="h-9 w-9 overflow-hidden rounded-xl bg-neutral-900 border border-white/[0.06] p-0.5 flex items-center justify-center">
+            <div className="h-9 w-9 overflow-hidden rounded-xl bg-neutral-900 border border-white/[0.08] p-0.5 flex items-center justify-center shadow-inner">
               <img src={logoImg} alt="Logo" className="h-full w-full object-cover rounded-lg" />
             </div>
-            <p className="text-xs font-bold tracking-widest text-neutral-200 uppercase">Secura Vault</p>
+            <p className="text-sm font-bold tracking-wider bg-clip-text text-transparent bg-gradient-to-r from-neutral-100 via-neutral-200 to-neutral-400 uppercase">Secura Vault</p>
           </div>
 
           <button
             onClick={handleLogout}
-            className="group flex items-center gap-2 rounded-xl bg-white/[0.02] border border-white/[0.06] px-4 py-2 text-xs font-medium text-neutral-400 hover:bg-red-500/10 hover:text-red-400 hover:border-red-500/20 active:scale-[0.98] transition-all duration-200 cursor-pointer"
+            className="group flex items-center gap-2 rounded-xl bg-white/[0.02] border border-white/[0.06] px-3.5 py-2 text-xs font-medium text-neutral-400 hover:bg-red-500/10 hover:text-red-400 hover:border-red-500/20 active:scale-[0.97] transition-all duration-200 cursor-pointer shadow-sm"
           >
-            <span>Log out</span>
-            <LogOut className="w-3.5 h-3.5 text-neutral-500 group-hover:text-red-400 transition-all duration-200" />
+            <span className="hidden sm:inline">Sign Out</span>
+            <LogOut className="w-3.5 h-3.5 text-neutral-500 group-hover:text-red-400 group-hover:translate-x-0.5 transition-all duration-200" />
           </button>
         </div>
       </header>
 
-      <main className="mx-auto max-w-6xl px-4 sm:px-6 py-8 sm:py-12 relative z-10">
-        <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between border-b border-white/[0.04] pb-8">
+      <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6 sm:py-10 relative z-10">
+        <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between border-b border-white/[0.04] pb-6 sm:pb-8">
           <div>
-            <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-neutral-100">Your Asset Vault</h1>
-            <p className="text-xs text-neutral-500 mt-0.5">Direct zero-knowledge micro-document management system.</p>
+            <h1 className="text-xl sm:text-3xl font-extrabold tracking-tight text-white">Asset Registry</h1>
+            <p className="text-xs sm:text-sm text-neutral-400 mt-1 font-medium">Direct zero-knowledge architectural micro-document safe house.</p>
           </div>
 
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full md:w-auto">
-            <div className="relative w-full sm:w-64">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full lg:w-auto">
+            <div className="relative w-full lg:w-72">
               <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-500" />
               <input
                 value={queryText}
                 onChange={(e) => setQueryText(e.target.value)}
-                placeholder="Search documents..."
-                className="w-full rounded-xl bg-black/40 border border-white/[0.04] pl-10 pr-10 py-2.5 text-sm outline-none placeholder:text-neutral-600 text-neutral-200 focus:border-[#10b981]/30 transition-all"
+                placeholder="Query identifier index..."
+                className="w-full rounded-xl bg-neutral-900/40 border border-white/[0.06] pl-10 pr-10 py-2.5 text-sm outline-none placeholder:text-neutral-500 text-neutral-100 focus:border-emerald-500/40 focus:bg-neutral-900/80 transition-all shadow-inner backdrop-blur-md"
               />
               {queryText && (
                 <button
                   onClick={() => setQueryText('')}
                   className="absolute right-3 top-1/2 -translate-y-1/2 p-1 rounded-lg text-neutral-500 hover:text-neutral-300 hover:bg-white/5 active:scale-95 transition-all cursor-pointer"
                 >
-                  <X className="w-4 h-4" />
+                  <X className="w-3.5 h-3.5" />
                 </button>
               )}
             </div>
 
-            <div className="relative" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center gap-2 w-full sm:w-auto">
+              <div className="relative flex-1 sm:flex-none" onClick={(e) => e.stopPropagation()}>
+                <button
+                  onClick={() => setIsSortOpen(!isSortOpen)}
+                  className="w-full sm:w-48 flex items-center justify-between gap-3 rounded-xl bg-neutral-900/40 border border-white/[0.06] px-4 py-2.5 text-sm font-medium text-neutral-300 hover:bg-white/[0.04] hover:border-white/[0.1] transition-all cursor-pointer shadow-sm backdrop-blur-md"
+                >
+                  <span className="truncate">{SORT_LABELS[sortBy]}</span>
+                  <ChevronDown className={`w-4 h-4 text-neutral-500 transition-transform duration-300 shrink-0 ${isSortOpen ? 'rotate-180' : ''}`} />
+                </button>
+
+                {isSortOpen && (
+                  <div className="absolute right-0 mt-2 w-full sm:w-48 rounded-xl border border-white/[0.08] bg-neutral-900/90 backdrop-blur-2xl p-1.5 shadow-2xl z-50 animate-in fade-in slide-in-from-top-2 duration-200">
+                    {(Object.keys(SORT_LABELS) as SortOption[]).map((option) => (
+                      <button
+                        key={option}
+                        onClick={() => { setSortBy(option); setIsSortOpen(false); }}
+                        className={`w-full flex items-center justify-between rounded-lg px-3 py-2 text-left text-xs sm:text-sm font-medium transition duration-150 cursor-pointer ${sortBy === option ? 'bg-emerald-500/10 text-emerald-400' : 'text-neutral-400 hover:bg-white/[0.03] hover:text-neutral-200'}`}
+                      >
+                        <span>{SORT_LABELS[option]}</span>
+                        {sortBy === option && <Check className="w-3.5 h-3.5 text-emerald-400" />}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+
               <button
-                onClick={() => setIsSortOpen(!isSortOpen)}
-                className="w-full sm:w-auto flex items-center justify-between gap-3 rounded-xl bg-black/40 border border-white/[0.04] px-4 py-2.5 text-sm font-medium text-neutral-400 hover:bg-white/[0.02] hover:border-white/[0.08] transition-all cursor-pointer"
+                onClick={() => setIsMobileFilterOpen(!isMobileFilterOpen)}
+                className="lg:hidden flex items-center justify-center p-2.5 rounded-xl bg-neutral-900/40 border border-white/[0.06] text-neutral-300 hover:bg-white/[0.04] transition-all cursor-pointer shadow-sm backdrop-blur-md"
               >
-                <span className="text-xs sm:text-sm">{SORT_LABELS[sortBy]}</span>
-                <ChevronDown className={`w-4 h-4 text-neutral-600 transition-transform duration-300 ${isSortOpen ? 'rotate-180' : ''}`} />
+                <SlidersHorizontal className="w-5 h-5" />
               </button>
 
-              {isSortOpen && (
-                <div className="absolute right-0 left-0 sm:left-auto mt-2 w-full sm:w-48 rounded-xl border border-white/[0.06] bg-neutral-900/90 backdrop-blur-xl p-1.5 shadow-2xl z-50 animate-in fade-in slide-in-from-top-2 duration-150">
-                  {(Object.keys(SORT_LABELS) as SortOption[]).map((option) => (
-                    <button
-                      key={option}
-                      onClick={() => { setSortBy(option); setIsSortOpen(false); }}
-                      className={`w-full flex items-center justify-between rounded-lg px-3.5 py-2 text-left text-xs sm:text-sm font-medium transition duration-100 cursor-pointer ${sortBy === option ? 'bg-[#10b981]/10 text-[#10b981]' : 'text-neutral-400 hover:bg-white/[0.02] hover:text-neutral-200'}`}
-                    >
-                      <span>{SORT_LABELS[option]}</span>
-                      {sortBy === option && <Check className="w-4 h-4 text-[#10b981]" />}
-                    </button>
-                  ))}
-                </div>
-              )}
+              <DashboardUploadFlow
+                onUploaded={() => setActive('All')}
+                onPickerOpenChange={setIsNativePickerOpen}
+              />
             </div>
-
-            <DashboardUploadFlow
-              onUploaded={() => setActive('All')}
-              onPickerOpenChange={setIsNativePickerOpen}
-            />
-
           </div>
         </div>
 
-        <div className="mt-8 grid gap-6 md:grid-cols-12">
-          <aside className="md:col-span-3">
-            <div className="rounded-2xl md:border md:border-white/[0.04] md:bg-white/[0.01] md:p-2 md:sticky md:top-24">
-              <p className="mb-2 px-1 md:px-3 pt-2 text-[10px] font-bold uppercase tracking-widest text-neutral-600 block">Directory Segments</p>
-              <div className="relative flex md:flex-col gap-1 overflow-x-auto pb-2 md:pb-0 scrollbar-none snap-x mask-gradient">
+        <div className="mt-6 sm:mt-8 grid gap-6 lg:grid-cols-12 items-start">
+          <aside className={`lg:col-span-3 transition-all duration-300 ${isMobileFilterOpen ? 'block' : 'hidden lg:block'}`}>
+            <div className="rounded-2xl border border-white/[0.06] bg-neutral-900/20 p-3 lg:sticky lg:top-24 backdrop-blur-xl shadow-sm">
+              <p className="mb-2 px-3 pt-1 text-[10px] font-bold uppercase tracking-widest text-neutral-500 flex items-center gap-1.5">
+                <LayoutGrid className="w-3 h-3 text-neutral-500" /> Directory Segments
+              </p>
+              <div className="flex flex-col gap-1">
                 {CATEGORIES.map((category) => (
                   <button
                     key={category}
-                    onClick={() => { setActive(category); setQueryText(''); }}
-                    className={`rounded-xl px-4 py-2 text-xs sm:text-sm font-semibold transition-all whitespace-nowrap snap-item md:w-full md:text-left cursor-pointer ${active === category
-                      ? 'bg-[#10b981]/10 text-[#10b981] border border-[#10b981]/20'
-                      : 'text-neutral-400 border border-white/[0.04] bg-white/[0.01] md:border-transparent md:bg-transparent hover:bg-white/[0.02] hover:text-neutral-200'
+                    onClick={() => { setActive(category); setQueryText(''); lg:hidden && setIsMobileFilterOpen(false); }}
+                    className={`rounded-xl px-4 py-2.5 text-xs sm:text-sm font-semibold transition-all text-left w-full flex items-center justify-between group cursor-pointer ${active === category
+                      ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 shadow-sm font-bold'
+                      : 'text-neutral-400 border border-transparent hover:bg-white/[0.02] hover:text-neutral-200'
                       }`}
                   >
-                    {category}
+                    <span>{category}</span>
+                    {active === category && <div className="h-1.5 w-1.5 rounded-full bg-emerald-400 shadow-glow" />}
                   </button>
                 ))}
               </div>
             </div>
           </aside>
 
-          <section className="md:col-span-9">
-            <div className="rounded-2xl border border-white/[0.04] bg-white/[0.01] p-4 sm:p-6 backdrop-blur-xl min-h-[400px]">
-              <div className="space-y-3">
+          <section className="lg:col-span-9 w-full">
+            <div className="rounded-2xl border border-white/[0.06] bg-neutral-900/10 p-3 sm:p-6 backdrop-blur-2xl min-h-[450px] shadow-sm relative overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-b from-white/[0.01] to-transparent pointer-events-none" />
+              <div className="space-y-3 relative z-10">
                 {filteredDocuments.length === 0 ? (
-                  <div className="flex flex-col items-center justify-center py-24 text-center rounded-xl border border-white/[0.04] bg-black/10">
-                    <Folder className="w-7 h-7 text-neutral-700 mb-2" />
-                    <p className="text-xs font-medium text-neutral-500">No parameters index matched.</p>
+                  <div className="flex flex-col items-center justify-center py-28 text-center rounded-xl border border-white/[0.04] bg-neutral-900/20 backdrop-blur-md">
+                    <Folder className="w-9 h-9 text-neutral-600 mb-3 stroke-[1.5]" />
+                    <p className="text-sm font-semibold text-neutral-400">No parameters indexed</p>
+                    <p className="text-xs text-neutral-500 max-w-[240px] mt-1">Refine your active filter queries or catalog a brand new entry matrix.</p>
                   </div>
                 ) : (
                   filteredDocuments.map((docItem) => (
-                    <div key={docItem.id} className="group flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-xl border border-white/[0.03] bg-black/10 px-4 py-3.5 hover:border-white/[0.06] hover:bg-black/30 transition-all duration-200">
+                    <div key={docItem.id} className="group flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-xl border border-white/[0.04] bg-neutral-900/40 px-4 py-3.5 hover:border-white/[0.1] hover:bg-neutral-900/70 transition-all duration-300 shadow-sm backdrop-blur-md">
                       <div className="flex items-center gap-4 min-w-0 flex-1 w-full">
-                        <div className="w-14 h-10 sm:w-16 sm:h-12 overflow-hidden rounded-xl bg-neutral-900 border border-white/[0.04] flex items-center justify-center shrink-0">
+                        <div className="w-12 h-12 overflow-hidden rounded-xl bg-neutral-950 border border-white/[0.08] flex items-center justify-center shrink-0 shadow-inner group-hover:border-white/[0.15] transition-all duration-300">
                           <img
                             src={CATEGORY_ICONS[docItem.category]}
                             alt={docItem.category}
-                            className="h-full w-full object-cover select-none brightness-[0.85] group-hover:brightness-100 transition-all duration-200"
+                            className="h-full w-full object-cover select-none brightness-[0.9] group-hover:scale-105 group-hover:brightness-100 transition-all duration-300"
                             onError={(e) => { (e.target as HTMLImageElement).src = logoImg; }}
                           />
                         </div>
                         <div className="min-w-0 flex-1">
                           <div className="flex items-center gap-2 max-w-full">
                             {editingDocId === docItem.id ? (
-                              <div className="flex items-center gap-1.5 w-full max-w-md">
+                              <div className="flex items-center gap-2 w-full max-w-md animate-in fade-in duration-200">
                                 <input
                                   type="text"
                                   value={editingName}
                                   onChange={(e) => setEditingName(e.target.value)}
-                                  className="bg-neutral-950 border border-[#10b981]/20 rounded-lg px-2 py-1 text-sm text-neutral-200 outline-none w-full focus:border-[#10b981]"
+                                  className="bg-neutral-950 border border-emerald-500/30 rounded-lg px-2.5 py-1 text-sm text-white outline-none w-full focus:border-emerald-500 shadow-inner"
                                   autoFocus
                                   onKeyDown={(e) => {
                                     if (e.key === 'Enter') saveFileName(docItem.id)
                                     if (e.key === 'Escape') setEditingDocId(null)
                                   }}
                                 />
-                                <button onClick={() => saveFileName(docItem.id)} className="p-1.5 rounded-lg bg-[#10b981]/10 text-[#10b981] text-xs font-bold hover:bg-[#10b981]/20 transition cursor-pointer">Save</button>
-                                <button onClick={() => setEditingDocId(null)} className="p-1.5 rounded-lg bg-white/5 text-neutral-500 text-xs hover:bg-white/10 transition cursor-pointer">Cancel</button>
+                                <button onClick={() => saveFileName(docItem.id)} className="px-3 py-1 rounded-lg bg-emerald-500 text-neutral-950 text-xs font-bold hover:bg-emerald-400 active:scale-95 transition cursor-pointer shadow-md">Save</button>
+                                <button onClick={() => setEditingDocId(null)} className="px-2.5 py-1 rounded-lg bg-white/5 border border-white/[0.06] text-neutral-400 text-xs font-medium hover:bg-white/10 hover:text-white transition cursor-pointer">Cancel</button>
                               </div>
                             ) : (
-                              <div className="flex items-center gap-2 min-w-0 max-w-full">
-                                <p className="text-sm font-semibold text-neutral-300 group-hover:text-neutral-100 transition truncate max-w-[140px] sm:max-w-[260px] md:max-w-[340px]">{docItem.name}</p>
-                                <button onClick={() => startEditing(docItem)} className="p-1 text-neutral-600 hover:text-[#10b981] transition cursor-pointer opacity-100 sm:opacity-0 sm:group-hover:opacity-100 focus:opacity-100 shrink-0">
+                              <div className="flex items-center gap-2.5 min-w-0 max-w-full">
+                                <p className="text-sm font-bold text-neutral-200 group-hover:text-white transition truncate max-w-[150px] sm:max-w-[240px] md:max-w-[360px]">{docItem.name}</p>
+                                <button onClick={() => startEditing(docItem)} className="p-1 rounded text-neutral-500 hover:text-emerald-400 hover:bg-white/5 transition cursor-pointer opacity-100 sm:opacity-0 sm:group-hover:opacity-100 focus:opacity-100 shrink-0">
                                   <Edit3 className="w-3.5 h-3.5" />
                                 </button>
-                                <span className="rounded bg-neutral-900 border border-white/[0.04] px-1.5 py-0.5 text-[9px] font-bold text-neutral-500 tracking-wider shrink-0 uppercase">{docItem.category}</span>
+                                <span className="rounded-md bg-white/[0.02] border border-white/[0.06] px-2 py-0.5 text-[9px] font-bold text-neutral-400 tracking-wider shrink-0 uppercase shadow-sm">{docItem.category}</span>
                               </div>
                             )}
                           </div>
-                          <p className="text-[11px] text-neutral-500 mt-0.5 flex items-center gap-1.5 flex-wrap">
-                            <span>Indexed on {docItem.createdAt}</span>
-                            <span className="text-neutral-800">•</span>
-                            <span className="text-neutral-400 font-medium">{docItem.sizeText}</span>
+                          <p className="text-[11px] text-neutral-400 mt-1 flex items-center gap-2 flex-wrap font-medium">
+                            <span className="flex items-center gap-1"><FileText className="w-3 h-3 text-neutral-500" /> {docItem.createdAt}</span>
+                            <span className="text-white/[0.06]">•</span>
+                            <span className="text-neutral-500">{docItem.sizeText}</span>
                           </p>
                         </div>
                       </div>
 
-                      <div className="flex items-center justify-end gap-2 shrink-0 border-t border-white/[0.04] pt-3 sm:pt-0 sm:border-none w-full sm:w-auto">
-                        <button onClick={() => setPreviewDoc(docItem)} className="flex-1 sm:flex-none rounded-xl bg-white/[0.02] border border-white/[0.04] px-4 py-2 text-xs font-bold text-neutral-300 hover:bg-white/[0.06] hover:text-white transition cursor-pointer text-center">
+                      <div className="flex items-center justify-end gap-2 shrink-0 border-t border-white/[0.04] sm:border-none pt-3 sm:pt-0 w-full sm:w-auto">
+                        <button onClick={() => setPreviewDoc(docItem)} className="flex-1 sm:flex-none rounded-xl bg-white/[0.03] border border-white/[0.06] px-4 py-2 text-xs font-bold text-neutral-200 hover:bg-white/[0.08] hover:text-white hover:border-white/[0.12] active:scale-[0.97] transition cursor-pointer text-center shadow-sm">
                           View
                         </button>
-                        <button onClick={() => handleDownloadDocument(docItem)} className="rounded-xl bg-white/[0.02] border border-white/[0.04] p-2 text-neutral-400 hover:bg-white/[0.06] hover:text-neutral-200 transition cursor-pointer">
+                        <button onClick={() => handleDownloadDocument(docItem)} className="rounded-xl bg-white/[0.03] border border-white/[0.06] p-2 text-neutral-400 hover:bg-white/[0.08] hover:text-neutral-200 hover:border-white/[0.12] active:scale-[0.97] transition cursor-pointer shadow-sm">
                           <Download className="w-4 h-4" />
                         </button>
-                        <button onClick={() => setDeleteTarget(docItem)} className="rounded-xl bg-red-500/5 p-2 text-neutral-500 border border-red-500/10 hover:bg-red-500/20 hover:text-red-400 transition cursor-pointer">
+                        <button onClick={() => setDeleteTarget(docItem)} className="rounded-xl bg-red-500/5 p-2 text-neutral-500 border border-red-500/10 hover:bg-red-500/15 hover:text-red-400 hover:border-red-500/20 active:scale-[0.97] transition cursor-pointer shadow-sm">
                           <Trash2 className="w-4 h-4" />
                         </button>
                       </div>
@@ -583,43 +595,46 @@ export default function Dashboard() {
       </main>
 
       {deleteTarget && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4 pointer-events-auto">
-          <div className="w-full max-w-md bg-neutral-900 border border-white/[0.06] rounded-2xl p-6 shadow-2xl">
-            <div className="flex items-start gap-4">
-              <div className="h-10 w-10 rounded-xl bg-red-500/10 border border-red-500/20 flex items-center justify-center text-red-400 shrink-0">
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center z-50 p-4 pointer-events-auto animate-in fade-in duration-200">
+          <div className="w-full max-w-md bg-neutral-900 border border-white/[0.08] rounded-2xl p-6 shadow-2xl relative animate-in zoom-in-95 duration-200">
+            <div className="absolute inset-0 bg-gradient-to-b from-red-500/[0.02] to-transparent pointer-events-none rounded-2xl" />
+            <div className="flex items-start gap-4 relative z-10">
+              <div className="h-10 w-10 rounded-xl bg-red-500/10 border border-red-500/20 flex items-center justify-center text-red-400 shrink-0 shadow-inner">
                 <AlertTriangle className="w-5 h-5" />
               </div>
               <div className="space-y-1 flex-1 min-w-0">
-                <h3 className="text-base font-bold text-neutral-100">Purge Asset Payload</h3>
+                <h3 className="text-base font-bold text-white">Purge Asset Payload</h3>
                 <p className="text-xs text-neutral-400 leading-relaxed">
-                  Are you sure you want to delete <span className="text-neutral-200 font-semibold break-all">{deleteTarget.name}</span>?
+                  Are you absolutely certain you want to destroy <span className="text-neutral-200 font-bold break-all">{deleteTarget.name}</span>? This structural matrix action is irreversible.
                 </p>
               </div>
             </div>
-            <div className="mt-6 flex justify-end gap-3">
-              <button onClick={() => setDeleteTarget(null)} className="px-4 py-2 rounded-xl text-xs font-bold text-neutral-400 bg-white/[0.02] border border-white/[0.04] hover:bg-white/5 transition cursor-pointer">Cancel</button>
-              <button onClick={confirmPremiumDeletion} className="px-4 py-2 rounded-xl text-xs font-bold text-white bg-red-500/80 hover:bg-red-500 transition cursor-pointer">Confirm Purge</button>
+            <div className="mt-6 flex justify-end gap-2.5 relative z-10">
+              <button onClick={() => setDeleteTarget(null)} className="px-4 py-2 rounded-xl text-xs font-bold text-neutral-400 bg-white/[0.02] border border-white/[0.04] hover:bg-white/5 hover:text-neutral-200 transition cursor-pointer">Cancel</button>
+              <button onClick={confirmPremiumDeletion} className="px-4 py-2 rounded-xl text-xs font-bold text-white bg-gradient-to-r from-red-500 via-red-600 to-red-700 hover:from-red-600 hover:to-red-800 active:scale-95 transition cursor-pointer shadow-md shadow-red-950/20">Confirm Purge</button>
             </div>
           </div>
         </div>
       )}
+
       {previewDoc && (
-        <div className="fixed inset-0 bg-black/95 backdrop-blur-sm flex flex-col items-center justify-center z-50 p-3 sm:p-4 pointer-events-auto">
-          <div className="w-full max-w-4xl flex items-center justify-between mb-4 px-1">
+        <div className="fixed inset-0 bg-black/95 backdrop-blur-xl flex flex-col items-center justify-center z-50 p-3 sm:p-6 pointer-events-auto animate-in fade-in duration-200">
+          <div className="w-full max-w-5xl flex items-center justify-between mb-4 px-2">
             <div className="min-w-0">
-              <h3 className="text-sm font-bold text-neutral-200 truncate max-w-[180px] sm:max-w-md">{previewDoc.name}</h3>
-              <p className="text-[11px] text-neutral-500 mt-0.5">Asset Category: <span className="text-[#10b981] font-bold uppercase">{previewDoc.category}</span></p>
+              <h3 className="text-sm font-bold text-white truncate max-w-[180px] sm:max-w-md">{previewDoc.name}</h3>
+              <p className="text-[11px] text-neutral-400 mt-0.5 font-medium">Asset Matrix: <span className="text-emerald-400 font-bold uppercase tracking-wider">{previewDoc.category}</span></p>
             </div>
             <div className="flex items-center gap-2">
-              <button onClick={() => handleDownloadDocument(previewDoc)} className="h-8 px-3 rounded-lg bg-white/5 border border-white/[0.06] text-neutral-400 hover:text-white flex items-center gap-1.5 text-xs font-semibold"><Download className="w-3.5 h-3.5" /> <span className="hidden sm:inline">Download</span></button>
-              <button onClick={() => setPreviewDoc(null)} className="h-8 w-8 rounded-lg bg-white/5 border border-white/[0.06] text-neutral-400 hover:text-white flex items-center justify-center"><X className="w-4 h-4" /></button>
+              <button onClick={() => handleDownloadDocument(previewDoc)} className="h-8 px-3 rounded-lg bg-white/5 border border-white/[0.06] text-neutral-300 hover:text-white hover:bg-white/10 flex items-center gap-1.5 text-xs font-bold transition shadow-sm"><Download className="w-3.5 h-3.5" /> <span className="hidden sm:inline">Download</span></button>
+              <button onClick={() => setPreviewDoc(null)} className="h-8 w-8 rounded-lg bg-white/5 border border-white/[0.06] text-neutral-400 hover:text-white hover:bg-white/10 flex items-center justify-center transition shadow-sm"><X className="w-4 h-4" /></button>
             </div>
           </div>
-          <div className="w-full max-w-4xl flex-1 bg-black/40 border border-white/[0.04] rounded-2xl overflow-hidden flex items-center justify-center max-h-[75vh]">
+          <div className="w-full max-w-5xl flex-1 bg-neutral-900/40 border border-white/[0.06] rounded-2xl overflow-hidden flex items-center justify-center max-h-[78vh] shadow-2xl relative">
+            <div className="absolute inset-0 bg-gradient-to-b from-white/[0.01] to-transparent pointer-events-none" />
             {previewDoc.fileUrl.startsWith('data:application/pdf') ? (
-              <iframe src={previewDoc.fileUrl} className="w-full h-[70vh] rounded-xl" title={previewDoc.name} />
+              <iframe src={previewDoc.fileUrl} className="w-full h-[74vh] rounded-xl border-none filter brightness-[0.95]" title={previewDoc.name} />
             ) : (
-              <img src={previewDoc.fileUrl} alt={previewDoc.name} className="max-w-full max-h-full object-contain p-2" />
+              <img src={previewDoc.fileUrl} alt={previewDoc.name} className="max-w-full max-h-full object-contain p-2 select-none filter brightness-[0.95]" />
             )}
           </div>
         </div>
