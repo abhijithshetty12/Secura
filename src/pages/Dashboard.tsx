@@ -417,7 +417,7 @@ export default function Dashboard() {
             onClick={handleLogout}
             className="group flex items-center gap-2 rounded-xl bg-white/[0.02] border border-white/[0.06] px-3.5 py-2 text-xs font-medium text-neutral-400 hover:bg-red-500/10 hover:text-red-400 hover:border-red-500/20 active:scale-[0.97] transition-all duration-200 cursor-pointer shadow-sm"
           >
-            <span className="hidden sm:inline">Sign Out</span>
+            <span className="hidden sm:inline">Log Out</span>
             <LogOut className="w-3.5 h-3.5 text-neutral-500 group-hover:text-red-400 group-hover:translate-x-0.5 transition-all duration-200" />
           </button>
         </div>
@@ -426,17 +426,17 @@ export default function Dashboard() {
       <main className="mx-auto max-w-7xl px-3 sm:px-6 lg:px-8 py-6 sm:py-10 relative z-10">
         <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between border-b border-white/[0.04] pb-6 sm:pb-8">
           <div>
-            <h1 className="text-xl sm:text-3xl font-extrabold tracking-tight text-white">Asset Registry</h1>
+            <h1 className="text-xl sm:text-3xl font-extrabold tracking-tight text-white">Your Asset Vault</h1>
             <p className="text-xs sm:text-sm text-neutral-400 mt-1 font-medium">Direct zero-knowledge architectural micro-document safe house.</p>
           </div>
 
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full lg:w-auto">
             <div className="relative w-full lg:w-72">
-              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-500" />
+              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-white" />
               <input
                 value={queryText}
                 onChange={(e) => setQueryText(e.target.value)}
-                placeholder="Query identifier index..."
+                placeholder="Search Documents..."
                 className="w-full rounded-xl bg-neutral-900/40 border border-white/[0.06] pl-10 pr-10 py-2.5 text-sm outline-none placeholder:text-neutral-500 text-neutral-100 focus:border-emerald-500/40 focus:bg-neutral-900/80 transition-all shadow-inner backdrop-blur-md"
               />
               {queryText && (
@@ -483,7 +483,6 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* Mobile Filter Track (Sticky / Scrollable horizontally layout) */}
         <div className="lg:hidden mt-4 overflow-x-auto no-scrollbar flex items-center gap-1.5 pb-2 -mx-3 px-3">
           {CATEGORIES.map((category) => (
             <button
@@ -500,7 +499,6 @@ export default function Dashboard() {
         </div>
 
         <div className="mt-4 sm:mt-8 grid gap-6 lg:grid-cols-12 items-start">
-          {/* Desktop Left Bar */}
           <aside className="hidden lg:block lg:col-span-3">
             <div className="rounded-2xl border border-white/[0.06] bg-neutral-900/20 p-3 lg:sticky lg:top-24 backdrop-blur-xl shadow-sm">
               <p className="mb-2 px-3 pt-1 text-[10px] font-bold uppercase tracking-widest text-neutral-500 flex items-center gap-1.5">
@@ -524,7 +522,6 @@ export default function Dashboard() {
             </div>
           </aside>
 
-          {/* Main Documents Grid Frame */}
           <section className="lg:col-span-9 w-full">
             <div className="rounded-2xl border border-white/[0.06] bg-neutral-900/10 p-3 sm:p-6 backdrop-blur-2xl shadow-sm relative overflow-hidden">
               <div className="absolute inset-0 bg-gradient-to-b from-white/[0.01] to-transparent pointer-events-none" />
