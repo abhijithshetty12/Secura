@@ -431,56 +431,56 @@ export default function Dashboard() {
           </div>
 
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full lg:w-auto">
-            <div className="relative w-full lg:w-72">
-              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-white" />
-              <input
-                value={queryText}
-                onChange={(e) => setQueryText(e.target.value)}
-                placeholder="Search Documents..."
-                className="w-full rounded-xl bg-neutral-900/40 border border-white/[0.06] pl-10 pr-10 py-2.5 text-sm outline-none placeholder:text-neutral-500 text-neutral-100 focus:border-emerald-500/40 focus:bg-neutral-900/80 transition-all shadow-inner backdrop-blur-md"
-              />
-              {queryText && (
-                <button
-                  onClick={() => setQueryText('')}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 p-1 rounded-lg text-neutral-500 hover:text-neutral-300 hover:bg-white/5 active:scale-95 transition-all cursor-pointer"
-                >
-                  <X className="w-3.5 h-3.5" />
-                </button>
-              )}
-            </div>
+  <div className="relative w-full lg:w-72">
+    <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-white" />
+    <input
+      value={queryText}
+      onChange={(e) => setQueryText(e.target.value)}
+      placeholder="Search Documents..."
+      className="w-full rounded-xl bg-neutral-900/40 border border-white/[0.06] pl-10 pr-10 py-2.5 text-sm outline-none placeholder:text-neutral-500 text-neutral-100 focus:border-emerald-500/40 focus:bg-neutral-900/80 transition-all shadow-inner backdrop-blur-md"
+    />
+    {queryText && (
+      <button
+        onClick={() => setQueryText('')}
+        className="absolute right-3 top-1/2 -translate-y-1/2 p-1 rounded-lg text-neutral-500 hover:text-neutral-300 hover:bg-white/5 active:scale-95 transition-all cursor-pointer"
+      >
+        <X className="w-3.5 h-3.5" />
+      </button>
+    )}
+  </div>
 
-            <div className="flex items-center gap-2 w-full sm:w-auto">
-              <div className="relative flex-1 sm:flex-none" onClick={(e) => e.stopPropagation()}>
-                <button
-                  onClick={() => setIsSortOpen(!isSortOpen)}
-                  className="w-full sm:w-48 flex items-center justify-between gap-3 rounded-xl bg-neutral-900/40 border border-white/[0.06] px-4 py-2.5 text-sm font-medium text-neutral-300 hover:bg-white/[0.04] hover:border-white/[0.1] transition-all cursor-pointer shadow-sm backdrop-blur-md"
-                >
-                  <span className="truncate">{SORT_LABELS[sortBy]}</span>
-                  <ChevronDown className={`w-4 h-4 text-neutral-500 transition-transform duration-300 shrink-0 ${isSortOpen ? 'rotate-180' : ''}`} />
-                </button>
+  <div className="flex items-center gap-2 w-full sm:w-auto">
+    <div className="relative flex-1 sm:flex-none" onClick={(e) => e.stopPropagation()}>
+      <button
+        onClick={() => setIsSortOpen(!isSortOpen)}
+        className="w-full sm:w-48 flex items-center justify-between gap-3 rounded-xl bg-neutral-900/40 border border-white/[0.06] px-4 py-2.5 text-sm font-medium text-neutral-300 hover:bg-white/[0.04] hover:border-white/[0.1] transition-all cursor-pointer shadow-sm backdrop-blur-md"
+      >
+        <span className="truncate">{SORT_LABELS[sortBy]}</span>
+        <ChevronDown className={`w-4 h-4 text-neutral-500 transition-transform duration-300 shrink-0 ${isSortOpen ? 'rotate-180' : ''}`} />
+      </button>
 
-                {isSortOpen && (
-                  <div className="absolute right-0 mt-2 w-full sm:w-48 rounded-xl border border-white/[0.08] bg-neutral-900/90 backdrop-blur-2xl p-1.5 shadow-2xl z-50 animate-in fade-in slide-in-from-top-2 duration-200">
-                    {(Object.keys(SORT_LABELS) as SortOption[]).map((option) => (
-                      <button
-                        key={option}
-                        onClick={() => { setSortBy(option); setIsSortOpen(false); }}
-                        className={`w-full flex items-center justify-between rounded-lg px-3 py-2 text-left text-xs sm:text-sm font-medium transition duration-150 cursor-pointer ${sortBy === option ? 'bg-emerald-500/10 text-emerald-400' : 'text-neutral-400 hover:bg-white/[0.03] hover:text-neutral-200'}`}
-                      >
-                        <span>{SORT_LABELS[option]}</span>
-                        {sortBy === option && <Check className="w-3.5 h-3.5 text-emerald-400" />}
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
+      {isSortOpen && (
+        <div className="absolute right-0 mt-2 w-full sm:w-48 rounded-xl border border-white/[0.08] bg-neutral-900/90 backdrop-blur-2xl p-1.5 shadow-2xl z-50 animate-in fade-in slide-in-from-top-2 duration-200">
+          {(Object.keys(SORT_LABELS) as SortOption[]).map((option) => (
+            <button
+              key={option}
+              onClick={() => { setSortBy(option); setIsSortOpen(false); }}
+              className={`w-full flex items-center justify-between rounded-lg px-3 py-2 text-left text-xs sm:text-sm font-medium transition duration-150 cursor-pointer ${sortBy === option ? 'bg-emerald-500/10 text-emerald-400' : 'text-neutral-400 hover:bg-white/[0.03] hover:text-neutral-200'}`}
+            >
+              <span>{SORT_LABELS[option]}</span>
+              {sortBy === option && <Check className="w-3.5 h-3.5 text-emerald-400" />}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
 
-              <DashboardUploadFlow
-                onUploaded={() => setActive('All')}
-                onPickerOpenChange={setIsNativePickerOpen}
-              />
-            </div>
-          </div>
+    <DashboardUploadFlow
+      onUploaded={() => setActive('All')}
+      onPickerOpenChange={setIsNativePickerOpen}
+    />
+  </div>
+</div>
         </div>
 
         <div className="lg:hidden mt-4 overflow-x-auto no-scrollbar flex items-center gap-1.5 pb-2 -mx-3 px-3">
