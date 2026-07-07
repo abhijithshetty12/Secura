@@ -16,7 +16,6 @@ import {
   X,
   Download,
   AlertTriangle,
-  SlidersHorizontal,
   LayoutGrid,
   FileText
 } from 'lucide-react'
@@ -103,7 +102,6 @@ export default function Dashboard() {
   const [pinHash, setPinHash] = useState<string | null>(null)
   const [securityLoaded, setSecurityLoaded] = useState(false)
   const [deleteTarget, setDeleteTarget] = useState<UserDocument | null>(null)
-  const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false)
   const lastActivityRef = useRef<number>(Date.now())
 
   const recordUserActivity = useCallback(() => {
@@ -126,19 +124,19 @@ export default function Dashboard() {
   useEffect(() => {
     const run = async () => {
       const uid = auth.currentUser?.uid
-        if (!uid) return
-        try {
-          const snap = await getDoc(doc(db, 'users', uid))
-          const security = snap.data()?.security
-          setPinSalt(security?.pinSalt ?? null)
-          setPinHash(security?.pinHash ?? null)
-        } catch (e) {
-          console.error('Failed to load security profile', e)
-          setPinSalt(null)
-          setPinHash(null)
-        } finally {
-          setSecurityLoaded(true)
-        }
+      if (!uid) return
+      try {
+        const snap = await getDoc(doc(db, 'users', uid))
+        const security = snap.data()?.security
+        setPinSalt(security?.pinSalt ?? null)
+        setPinHash(security?.pinHash ?? null)
+      } catch (e) {
+        console.error('Failed to load security profile', e)
+        setPinSalt(null)
+        setPinHash(null)
+      } finally {
+        setSecurityLoaded(true)
+      }
     }
     run().catch((e) => console.error(e))
   }, [])
@@ -407,7 +405,7 @@ export default function Dashboard() {
       )}
 
       <header className="border-b border-white/[0.04] bg-neutral-900/40 backdrop-blur-xl sticky top-0 z-40 transition-all duration-300">
-        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-3 sm:px-6 lg:px-8">
           <div className="flex items-center gap-3">
             <div className="h-9 w-9 overflow-hidden rounded-xl bg-neutral-900 border border-white/[0.08] p-0.5 flex items-center justify-center shadow-inner">
               <img src={logoImg} alt="Logo" className="h-full w-full object-cover rounded-lg" />
@@ -425,7 +423,7 @@ export default function Dashboard() {
         </div>
       </header>
 
-      <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6 sm:py-10 relative z-10">
+      <main className="mx-auto max-w-7xl px-3 sm:px-6 lg:px-8 py-6 sm:py-10 relative z-10">
         <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between border-b border-white/[0.04] pb-6 sm:pb-8">
           <div>
             <h1 className="text-xl sm:text-3xl font-extrabold tracking-tight text-white">Asset Registry</h1>
@@ -477,13 +475,6 @@ export default function Dashboard() {
                 )}
               </div>
 
-              <button
-                onClick={() => setIsMobileFilterOpen(!isMobileFilterOpen)}
-                className="lg:hidden flex items-center justify-center p-2.5 rounded-xl bg-neutral-900/40 border border-white/[0.06] text-neutral-300 hover:bg-white/[0.04] transition-all cursor-pointer shadow-sm backdrop-blur-md"
-              >
-                <SlidersHorizontal className="w-5 h-5" />
-              </button>
-
               <DashboardUploadFlow
                 onUploaded={() => setActive('All')}
                 onPickerOpenChange={setIsNativePickerOpen}
@@ -492,8 +483,25 @@ export default function Dashboard() {
           </div>
         </div>
 
-        <div className="mt-6 sm:mt-8 grid gap-6 lg:grid-cols-12 items-start">
-          <aside className={`lg:col-span-3 transition-all duration-300 ${isMobileFilterOpen ? 'block' : 'hidden lg:block'}`}>
+        {/* Mobile Filter Track (Sticky / Scrollable horizontally layout) */}
+        <div className="lg:hidden mt-4 overflow-x-auto no-scrollbar flex items-center gap-1.5 pb-2 -mx-3 px-3">
+          {CATEGORIES.map((category) => (
+            <button
+              key={category}
+              onClick={() => { setActive(category); setQueryText(''); }}
+              className={`rounded-xl px-4 py-2 text-xs font-bold whitespace-nowrap border transition-all duration-200 cursor-pointer shrink-0 ${active === category
+                ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20 shadow-sm'
+                : 'text-neutral-400 border-white/[0.04] bg-neutral-900/20 hover:text-neutral-200'
+              }`}
+            >
+              {category}
+            </button>
+          ))}
+        </div>
+
+        <div className="mt-4 sm:mt-8 grid gap-6 lg:grid-cols-12 items-start">
+          {/* Desktop Left Bar */}
+          <aside className="hidden lg:block lg:col-span-3">
             <div className="rounded-2xl border border-white/[0.06] bg-neutral-900/20 p-3 lg:sticky lg:top-24 backdrop-blur-xl shadow-sm">
               <p className="mb-2 px-3 pt-1 text-[10px] font-bold uppercase tracking-widest text-neutral-500 flex items-center gap-1.5">
                 <LayoutGrid className="w-3 h-3 text-neutral-500" /> Directory Segments
@@ -502,8 +510,8 @@ export default function Dashboard() {
                 {CATEGORIES.map((category) => (
                   <button
                     key={category}
-                    onClick={() => { setActive(category); setQueryText(''); lg:hidden && setIsMobileFilterOpen(false); }}
-                    className={`rounded-xl px-4 py-2.5 text-xs sm:text-sm font-semibold transition-all text-left w-full flex items-center justify-between group cursor-pointer ${active === category
+                    onClick={() => { setActive(category); setQueryText(''); }}
+                    className={`rounded-xl px-4 py-2.5 text-sm font-semibold transition-all text-left w-full flex items-center justify-between group cursor-pointer ${active === category
                       ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 shadow-sm font-bold'
                       : 'text-neutral-400 border border-transparent hover:bg-white/[0.02] hover:text-neutral-200'
                       }`}
@@ -516,19 +524,20 @@ export default function Dashboard() {
             </div>
           </aside>
 
+          {/* Main Documents Grid Frame */}
           <section className="lg:col-span-9 w-full">
-            <div className="rounded-2xl border border-white/[0.06] bg-neutral-900/10 p-3 sm:p-6 backdrop-blur-2xl min-h-[450px] shadow-sm relative overflow-hidden">
+            <div className="rounded-2xl border border-white/[0.06] bg-neutral-900/10 p-3 sm:p-6 backdrop-blur-2xl shadow-sm relative overflow-hidden">
               <div className="absolute inset-0 bg-gradient-to-b from-white/[0.01] to-transparent pointer-events-none" />
               <div className="space-y-3 relative z-10">
                 {filteredDocuments.length === 0 ? (
-                  <div className="flex flex-col items-center justify-center py-28 text-center rounded-xl border border-white/[0.04] bg-neutral-900/20 backdrop-blur-md">
+                  <div className="flex flex-col items-center justify-center py-24 text-center rounded-xl border border-white/[0.04] bg-neutral-900/20 backdrop-blur-md">
                     <Folder className="w-9 h-9 text-neutral-600 mb-3 stroke-[1.5]" />
                     <p className="text-sm font-semibold text-neutral-400">No parameters indexed</p>
                     <p className="text-xs text-neutral-500 max-w-[240px] mt-1">Refine your active filter queries or catalog a brand new entry matrix.</p>
                   </div>
                 ) : (
                   filteredDocuments.map((docItem) => (
-                    <div key={docItem.id} className="group flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-xl border border-white/[0.04] bg-neutral-900/40 px-4 py-3.5 hover:border-white/[0.1] hover:bg-neutral-900/70 transition-all duration-300 shadow-sm backdrop-blur-md">
+                    <div key={docItem.id} className="group flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-xl border border-white/[0.04] bg-neutral-900/40 px-3.5 py-3.5 hover:border-white/[0.1] hover:bg-neutral-900/70 transition-all duration-300 shadow-sm backdrop-blur-md">
                       <div className="flex items-center gap-4 min-w-0 flex-1 w-full">
                         <div className="w-12 h-12 overflow-hidden rounded-xl bg-neutral-950 border border-white/[0.08] flex items-center justify-center shrink-0 shadow-inner group-hover:border-white/[0.15] transition-all duration-300">
                           <img
@@ -605,7 +614,7 @@ export default function Dashboard() {
               <div className="space-y-1 flex-1 min-w-0">
                 <h3 className="text-base font-bold text-white">Purge Asset Payload</h3>
                 <p className="text-xs text-neutral-400 leading-relaxed">
-                  Are you absolutely certain you want to destroy <span className="text-neutral-200 font-bold break-all">{deleteTarget.name}</span>? This structural matrix action is irreversible.
+                  Are you absolutely certain you want to destroy <span className="text-neutral-200 font-bold break-all">{deleteTarget.name}</span>? This action is irreversible.
                 </p>
               </div>
             </div>
