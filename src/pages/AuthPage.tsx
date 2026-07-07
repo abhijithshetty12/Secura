@@ -84,32 +84,45 @@ export default function AuthPage() {
   }
 
   return (
-    <div className="min-h-screen text-neutral-200 bg-[#020204] flex items-center justify-center font-sans selection:bg-[#d1fa4c]/20 selection:text-[#d1fa4c] antialiased relative overflow-hidden px-4 sm:px-6">
+    <div className="min-h-screen text-neutral-200 bg-[#030306] flex items-center justify-center font-sans selection:bg-[#d1fa4c]/20 selection:text-[#d1fa4c] antialiased relative overflow-hidden px-4 sm:px-6">
       
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff03_1px,transparent_1px),linear-gradient(to_bottom,#ffffff03_1px,transparent_1px)] bg-[size:32px_32px] pointer-events-none" />
+      {/* Structural Alignment Grid */}
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.015)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.015)_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none" />
       
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_50%_at_50%_50%,transparent_40%,#020204_100%)] pointer-events-none" />
+      {/* Vignette focal mask to push edge contrast down */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_80%_70%_at_50%_50%,transparent_30%,#030306_100%)] pointer-events-none" />
 
-      <svg className="absolute inset-0 w-full h-full stroke-white/[0.015] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_70%,transparent_100%)] pointer-events-none" xmlns="http://www.w3.org/2000/svg">
+      {/* Blueprint & Index Layer (Isometric Document Blueprints) */}
+      <svg className="absolute inset-0 w-full h-full stroke-white/[0.025] [mask-image:radial-gradient(ellipse_60%_60%_at_50%_50%,#000_80%,transparent_100%)] pointer-events-none" xmlns="http://www.w3.org/2000/svg">
         <defs>
-          <pattern id="cyber-web" width="128" height="128" patternUnits="userSpaceOnUse">
-            <path d="M0 64 h128 M64 0 v128 M0 0 l128 128 M128 0 L0 128" strokeDasharray="4 4" />
-            <circle cx="64" cy="64" r="2" fill="#d1fa4c" className="opacity-20 animate-pulse" />
+          <pattern id="blueprint-index" width="160" height="160" patternUnits="userSpaceOnUse" patternTransform="rotate(30)">
+            {/* Blueprint grid sub-ticks */}
+            <path d="M 80 0 L 80 160 M 0 80 L 160 80" strokeDasharray="2 6" />
+            {/* Isometric document outline representations */}
+            <path d="M20 20 h40 v50 h-40 Z M30 30 h20 M30 40 h20 M30 50 h10" fill="none" strokeWidth="1" />
+            <path d="M100 90 h40 v50 h-40 Z M110 100 h20 M110 110 h20 M110 120 h10" fill="none" strokeWidth="1" />
+            {/* Index crosshair node markers */}
+            <circle cx="20" cy="20" r="1.5" fill="#d1fa4c" className="opacity-40" />
+            <circle cx="100" cy="90" r="1.5" fill="#3b82f6" className="opacity-40" />
           </pattern>
         </defs>
-        <rect width="100%" height="100%" fill="url(#cyber-web)" />
+        <rect width="100%" height="100%" fill="url(#blueprint-index)" />
       </svg>
 
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] h-[350px] rounded-full bg-[#d1fa4c]/20 blur-[120px] mix-blend-screen opacity-40 pointer-events-none" />
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full bg-blue-500/10 blur-[150px] mix-blend-screen opacity-30 pointer-events-none" />
+      {/* Target Focused Hyper-Glow (Directly framing the interface core) */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[380px] h-[380px] rounded-full bg-gradient-to-tr from-[#d1fa4c]/25 to-blue-600/20 blur-[90px] mix-blend-screen opacity-60 pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-blue-500/5 blur-[160px] pointer-events-none" />
 
       <div className="w-full max-w-[400px] relative z-10 py-6 sm:py-8">
         
-        <div className="absolute -inset-4 rounded-[40px] bg-gradient-to-r from-[#d1fa4c]/20 via-blue-500/10 to-[#d1fa4c]/5 blur-3xl opacity-80 pointer-events-none" />
+        {/* Tight perimeter backlight shadow */}
+        <div className="absolute -inset-2 rounded-[32px] bg-gradient-to-b from-[#d1fa4c]/15 to-transparent blur-xl opacity-70 pointer-events-none" />
         
-        <div className="absolute -inset-px rounded-3xl bg-gradient-to-r from-[#d1fa4c]/20 via-white/[0.04] to-blue-500/20 pointer-events-none opacity-70" />
+        {/* Clean dual-tone frame wrap */}
+        <div className="absolute -inset-px rounded-3xl bg-gradient-to-b from-white/[0.08] via-transparent to-blue-500/10 pointer-events-none" />
 
-        <div className="rounded-3xl border border-white/[0.05] bg-[#050608]/95 p-5 sm:p-8 shadow-[inset_0_1px_1px_rgba(255,255,255,0.05),0_25px_50px_-12px_rgba(0,0,0,0.7)] backdrop-blur-xl relative">
+        {/* System Interface Container */}
+        <div className="rounded-3xl border border-white/[0.05] bg-[#07080c]/90 p-5 sm:p-8 shadow-[inset_0_1px_1px_rgba(255,255,255,0.03),0_32px_64px_-16px_rgba(0,0,0,0.85)] backdrop-blur-2xl relative">
 
           <div className="mb-6 flex flex-col items-center text-center relative">
             <div className="absolute top-0 right-0">
@@ -118,7 +131,7 @@ export default function AuthPage() {
               </Link>
             </div>
 
-            <div className="mb-4 flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-b from-white/[0.03] to-transparent border border-white/[0.06] shadow-[0_0_20px_rgba(209,250,76,0.15)] overflow-hidden">
+            <div className="mb-4 flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-b from-white/[0.03] to-transparent border border-white/[0.06] shadow-[0_0_20px_rgba(209,250,76,0.1)] overflow-hidden">
               <img
                 src={logoImg}
                 alt="Logo"
@@ -207,7 +220,7 @@ export default function AuthPage() {
 
             <button
               disabled={busy}
-              className="w-full h-11 relative mt-2 rounded-xl bg-[#d1fa4c] text-xs font-semibold text-black transition-all disabled:opacity-40 flex items-center justify-center gap-2 shadow-[0_4px_20px_rgba(209,250,76,0.25)] active:scale-[0.99] cursor-pointer"
+              className="w-full h-11 relative mt-2 rounded-xl bg-[#d1fa4c] text-xs font-semibold text-black transition-all disabled:opacity-40 flex items-center justify-center gap-2 shadow-[0_4px_20px_rgba(209,250,76,0.2)] active:scale-[0.99] cursor-pointer"
             >
               {busy ? (
                 <div className="h-4 w-4 animate-spin rounded-full border-2 border-black border-t-transparent" />
