@@ -84,20 +84,32 @@ export default function AuthPage() {
   }
 
   return (
-    <div className="min-h-screen text-neutral-200 bg-[#020203] flex items-center justify-center font-sans selection:bg-[#d1fa4c]/20 selection:text-[#d1fa4c] antialiased relative overflow-hidden px-4 sm:px-6">
+    <div className="min-h-screen text-neutral-200 bg-[#020204] flex items-center justify-center font-sans selection:bg-[#d1fa4c]/20 selection:text-[#d1fa4c] antialiased relative overflow-hidden px-4 sm:px-6">
       
-      <div className="absolute inset-0 opacity-[0.02] pointer-events-none" style={{ backgroundImage: 'radial-gradient(#d1fa4c 1px, transparent 1px)', backgroundSize: '24px 24px' }} />
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff03_1px,transparent_1px),linear-gradient(to_bottom,#ffffff03_1px,transparent_1px)] bg-[size:32px_32px] pointer-events-none" />
       
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.01)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.01)_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)] pointer-events-none" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_50%_at_50%_50%,transparent_40%,#020204_100%)] pointer-events-none" />
 
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[130vw] h-[130vw] sm:w-[800px] sm:h-[800px] rounded-full bg-gradient-to-tr from-[#d1fa4c]/10 via-transparent to-transparent blur-[160px] pointer-events-none" />
+      <svg className="absolute inset-0 w-full h-full stroke-white/[0.015] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_70%,transparent_100%)] pointer-events-none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <pattern id="cyber-web" width="128" height="128" patternUnits="userSpaceOnUse">
+            <path d="M0 64 h128 M64 0 v128 M0 0 l128 128 M128 0 L0 128" strokeDasharray="4 4" />
+            <circle cx="64" cy="64" r="2" fill="#d1fa4c" className="opacity-20 animate-pulse" />
+          </pattern>
+        </defs>
+        <rect width="100%" height="100%" fill="url(#cyber-web)" />
+      </svg>
+
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] h-[350px] rounded-full bg-[#d1fa4c]/20 blur-[120px] mix-blend-screen opacity-40 pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full bg-blue-500/10 blur-[150px] mix-blend-screen opacity-30 pointer-events-none" />
 
       <div className="w-full max-w-[400px] relative z-10 py-6 sm:py-8">
         
-        <div className="absolute inset-0 rounded-3xl bg-[#d1fa4c]/5 blur-2xl scale-[0.98] pointer-events-none" />
-        <div className="absolute -inset-px rounded-3xl bg-gradient-to-b from-white/[0.06] via-[#d1fa4c]/10 to-transparent pointer-events-none" />
+        <div className="absolute -inset-4 rounded-[40px] bg-gradient-to-r from-[#d1fa4c]/20 via-blue-500/10 to-[#d1fa4c]/5 blur-3xl opacity-80 pointer-events-none" />
+        
+        <div className="absolute -inset-px rounded-3xl bg-gradient-to-r from-[#d1fa4c]/20 via-white/[0.04] to-blue-500/20 pointer-events-none opacity-70" />
 
-        <div className="rounded-3xl border border-white/[0.04] bg-[#060709]/90 p-5 sm:p-8 shadow-[0_0_50px_-12px_rgba(209,250,76,0.12),0_32px_64px_-16px_rgba(0,0,0,1)] backdrop-blur-3xl relative">
+        <div className="rounded-3xl border border-white/[0.05] bg-[#050608]/95 p-5 sm:p-8 shadow-[inset_0_1px_1px_rgba(255,255,255,0.05),0_25px_50px_-12px_rgba(0,0,0,0.7)] backdrop-blur-xl relative">
 
           <div className="mb-6 flex flex-col items-center text-center relative">
             <div className="absolute top-0 right-0">
@@ -114,7 +126,7 @@ export default function AuthPage() {
               />
             </div>
 
-            <h1 className="text-xl font-semibold tracking-tight text-white flex items-center gap-2">
+            <h1 className="text-xl font-semibold tracking-tight text-white">
               {mode === 'login' ? 'Welcome back' : 'Create account'}
             </h1>
             <p className="text-xs text-neutral-400 mt-1">Secure decentralized credential indexing.</p>
@@ -195,7 +207,7 @@ export default function AuthPage() {
 
             <button
               disabled={busy}
-              className="w-full h-11 relative mt-2 rounded-xl bg-[#d1fa4c] text-xs font-semibold text-black transition-all disabled:opacity-40 flex items-center justify-center gap-2 shadow-[0_4px_20px_rgba(209,250,76,0.25)] active:scale-[0.99] cursor-pointer animate-pulse-subtle"
+              className="w-full h-11 relative mt-2 rounded-xl bg-[#d1fa4c] text-xs font-semibold text-black transition-all disabled:opacity-40 flex items-center justify-center gap-2 shadow-[0_4px_20px_rgba(209,250,76,0.25)] active:scale-[0.99] cursor-pointer"
             >
               {busy ? (
                 <div className="h-4 w-4 animate-spin rounded-full border-2 border-black border-t-transparent" />
