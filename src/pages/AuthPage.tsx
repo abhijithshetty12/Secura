@@ -85,8 +85,6 @@ export default function AuthPage() {
 
   return (
     <div className="min-h-screen text-neutral-200 bg-[#060b13] flex items-center justify-center font-sans selection:bg-[#2ae0c8]/20 selection:text-[#2ae0c8] antialiased relative overflow-hidden px-4 sm:px-6">
-      
-      {/* Dynamic Background Tech Radar Blueprint Grid */}
       <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.01)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.01)_1px,transparent_1px)] bg-[size:50px_50px] pointer-events-none" />
       
       <svg className="absolute inset-0 w-full h-full stroke-white/[0.02] pointer-events-none" xmlns="http://www.w3.org/2000/svg">
@@ -95,24 +93,13 @@ export default function AuthPage() {
         <line x1="0" y1="30%" x2="100%" y2="70%" strokeWidth="0.5" />
       </svg>
 
-      {/* Target Focused Hyper-Glow (Directly framing the glass container) */}
       <div className="absolute top-[15%] left-[10%] w-[450px] h-[450px] rounded-full bg-gradient-to-tr from-teal-500/20 to-blue-600/20 blur-[100px] pointer-events-none" />
       <div className="absolute bottom-[10%] right-[5%] w-[400px] h-[400px] rounded-full bg-gradient-to-br from-emerald-500/15 to-cyan-500/20 blur-[120px] pointer-events-none" />
 
-      {/* Main Glassmorphic Wrapper */}
       <div className="w-full max-w-[430px] relative z-10 py-6 sm:py-8">
-        
-        {/* Specular high-gloss reflection layer simulated on top frame */}
-        <div className="absolute -inset-px rounded-[40px] bg-gradient-to-b from-white/[0.25] via-white/[0.03] to-transparent pointer-events-none z-20" />
-        <div className="absolute -inset-px rounded-[40px] border border-white/[0.12] pointer-events-none z-20" />
-
-        {/* System Interface Container (Ultra Glass) */}
-        <div className="rounded-[40px] bg-gradient-to-b from-white/[0.07] to-white/[0.02] p-6 sm:p-9 shadow-[0_40px_80px_-15px_rgba(0,0,0,0.7),inset_0_2px_4px_rgba(255,255,255,0.15)] backdrop-blur-[32px] relative overflow-hidden">
-          
-          {/* Internal diagonal gloss light streak */}
+        <div className="rounded-[40px] border border-white/[0.08] bg-gradient-to-b from-white/[0.07] to-white/[0.02] p-6 sm:p-9 shadow-[0_40px_80px_-15px_rgba(0,0,0,0.7),inset_0_1px_2px_rgba(255,255,255,0.1)] backdrop-blur-[32px] relative overflow-hidden">
           <div className="absolute -inset-full bg-gradient-to-tr from-transparent via-white/[0.02] to-transparent rotate-45 pointer-events-none" />
 
-          {/* Header Area */}
           <div className="mb-7 flex flex-col items-center text-center relative">
             <div className="absolute top-0 right-0 z-30">
               <Link className="text-[11px] font-medium tracking-wide text-neutral-300 hover:text-white transition-all bg-white/[0.08] hover:bg-white/[0.15] rounded-full px-4 py-1.5 border border-white/[0.1] backdrop-blur-md shadow-sm" to="/">
@@ -120,7 +107,6 @@ export default function AuthPage() {
               </Link>
             </div>
 
-            {/* Profile Avatar Frame */}
             <div className="mb-5 flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-b from-white/[0.12] to-white/[0.02] p-[1px] border border-white/[0.15] shadow-lg overflow-hidden">
               <img
                 src={logoImg}
@@ -135,7 +121,6 @@ export default function AuthPage() {
             <p className="text-xs text-neutral-300/70 mt-1.5 font-light tracking-wide">Secure decentralized credential indexing</p>
           </div>
 
-          {/* Glossy Mode Switcher Segment */}
           <div className="mb-6 p-1 bg-black/30 rounded-full border border-white/[0.08] flex gap-1 relative shadow-inner">
             <button
               type="button"
@@ -153,10 +138,7 @@ export default function AuthPage() {
             </button>
           </div>
 
-          {/* Form */}
           <form onSubmit={onSubmitEmail} className="space-y-4">
-            
-            {/* Email Field */}
             <div className="relative">
               <div className="w-full rounded-full bg-white/[0.04] border border-white/[0.08] px-5 pt-7 pb-2 focus-within:border-teal-500/40 focus-within:ring-1 focus-within:ring-teal-500/20 transition-all flex items-center justify-between shadow-inner">
                 <div className="flex-1">
@@ -171,7 +153,6 @@ export default function AuthPage() {
                   />
                 </div>
                 
-                {/* Submit Action Attached directly to Input bar inline with design */}
                 <button
                   type="submit"
                   disabled={busy}
@@ -188,7 +169,6 @@ export default function AuthPage() {
               </div>
             </div>
 
-            {/* Password Field */}
             <div>
               <div className="relative w-full rounded-full bg-white/[0.04] border border-white/[0.08] px-5 pt-7 pb-2 focus-within:border-teal-500/40 focus-within:ring-1 focus-within:ring-teal-500/20 transition-all flex items-center shadow-inner">
                 <div className="flex-1">
@@ -229,14 +209,12 @@ export default function AuthPage() {
             )}
           </form>
 
-          {/* Divider */}
           <div className="my-6 flex items-center justify-between gap-3">
             <span className="h-px flex-1 bg-gradient-to-r from-transparent via-white/[0.08] to-transparent" />
             <span className="text-[9px] font-medium tracking-widest text-neutral-400 uppercase whitespace-nowrap opacity-60">Federated Connectors</span>
             <span className="h-px flex-1 bg-gradient-to-r from-transparent via-white/[0.08] to-transparent" />
           </div>
 
-          {/* Glassmorphic Rounded Pill Social Connectors */}
           <div className="grid grid-cols-2 gap-3">
             <button
               type="button"
@@ -265,7 +243,6 @@ export default function AuthPage() {
               GitHub
             </button>
           </div>
-
         </div>
       </div>
     </div>
